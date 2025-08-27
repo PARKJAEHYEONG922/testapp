@@ -17,12 +17,17 @@ from src.toolbox.formatters import format_int
 
 
 def create_step_header(title: str, subtitle: str = None) -> QVBoxLayout:
-    """공용 단계 헤더 생성 메서드
+    """공용 단계 헤더 생성 메서드 - 반응형 스케일링 적용
     모든 단계가 동일한 레이아웃과 스타일을 사용
     """
+    # 화면 스케일 팩터 가져오기
+    scale = tokens.get_screen_scale_factor()
+    
     header_layout = QVBoxLayout()
-    header_layout.setSpacing(tokens.GAP_8)
-    header_layout.setContentsMargins(0, 0, 0, tokens.GAP_15)
+    header_spacing = int(tokens.GAP_8 * scale)
+    header_margin = int(tokens.GAP_15 * scale)
+    header_layout.setSpacing(header_spacing)
+    header_layout.setContentsMargins(0, 0, 0, header_margin)
     
     # 메인 제목
     title_label = QLabel(title)
@@ -39,23 +44,26 @@ def create_step_header(title: str, subtitle: str = None) -> QVBoxLayout:
 
 
 def get_common_step_styles() -> str:
-    """공용 단계 스타일 반환
+    """공용 단계 스타일 반환 - 반응형 스케일링 적용
     모든 step 위젯에서 동일한 헤더 스타일 사용
     """
+    # 화면 스케일 팩터 가져오기
+    scale = tokens.get_screen_scale_factor()
+    
     return f"""
         QWidget#step_root {{
             background-color: {ModernStyle.COLORS['bg_primary']};
         }}
         QWidget#step_root QLabel[objectName="step_title"] {{
-            font-size: {tokens.get_font_size('title')}px;
+            font-size: {int(tokens.get_font_size('title') * scale)}px;
             font-weight: 600;
             color: {ModernStyle.COLORS['text_primary']};
-            margin-bottom: {tokens.GAP_8}px;
+            margin-bottom: {int(tokens.GAP_8 * scale)}px;
         }}
         QWidget#step_root QLabel[objectName="step_subtitle"] {{
-            font-size: {tokens.get_font_size('normal')}px;
+            font-size: {int(tokens.get_font_size('normal') * scale)}px;
             color: {ModernStyle.COLORS['text_secondary']};
-            margin-bottom: {tokens.GAP_15}px;
+            margin-bottom: {int(tokens.GAP_15 * scale)}px;
         }}
     """
 
@@ -79,11 +87,14 @@ def create_keyword_card(keyword_data, category_colors=None, use_radio=False, but
     card = QFrame()
     card.setObjectName("keyword_card")
     
-    # 기존 KeywordCard와 동일한 레이아웃
+    # 기존 KeywordCard와 동일한 레이아웃 - 반응형 스케일링 적용
     layout = QHBoxLayout()
-    margin_h = tokens.GAP_15
-    margin_v = tokens.GAP_12
-    spacing = tokens.GAP_15
+    
+    # 화면 스케일 팩터 가져오기
+    scale = tokens.get_screen_scale_factor()
+    margin_h = int(tokens.GAP_15 * scale)
+    margin_v = int(tokens.GAP_12 * scale)
+    spacing = int(tokens.GAP_15 * scale)
     layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
     layout.setSpacing(spacing)
     

@@ -53,9 +53,13 @@ class NaverCafeControlWidget(QWidget):
         self.update_progress_step(0, "active", "카페를 검색해주세요")
         
     def setup_ui(self):
-        """UI 초기화"""
+        """UI 초기화 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         layout = QVBoxLayout(self)
-        layout.setSpacing(tokens.GAP_10)
+        spacing = int(tokens.GAP_10 * scale)
+        layout.setSpacing(spacing)
         
         # 1. 진행상황 카드
         progress_card = self.create_progress_card()
@@ -85,12 +89,17 @@ class NaverCafeControlWidget(QWidget):
         layout.addStretch()
         
     def create_progress_card(self) -> ModernCard:
-        """진행상황 카드"""
+        """진행상황 카드 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         card = ModernCard("📊 진행상황")
-        # 진행상황 카드의 고정 높이 설정 (크기 변동 방지)
-        card.setFixedHeight(140)
+        # 진행상황 카드의 고정 높이 설정 (크기 변동 방지) - 반응형 스케일링 적용
+        card_height = int(140 * scale)
+        card.setFixedHeight(card_height)
         layout = QVBoxLayout()
-        layout.setSpacing(tokens.GAP_10)
+        layout_spacing = int(tokens.GAP_10 * scale)
+        layout.setSpacing(layout_spacing)
         
         # 진행 단계들
         self.progress_steps = [
@@ -103,10 +112,10 @@ class NaverCafeControlWidget(QWidget):
         
         # 진행 단계 표시 컨테이너
         progress_container = QWidget()
-        border_radius = tokens.RADIUS_SM
-        padding = tokens.GAP_12
-        margin = tokens.GAP_6
-        min_height = 30
+        border_radius = int(tokens.RADIUS_SM * scale)
+        padding = int(tokens.GAP_12 * scale)
+        margin = int(tokens.GAP_6 * scale)
+        min_height = int(30 * scale)
         progress_container.setStyleSheet(f"""
             QWidget {{
                 background-color: {ModernStyle.COLORS['bg_input']};
@@ -119,11 +128,14 @@ class NaverCafeControlWidget(QWidget):
         """)
         
         progress_grid = QHBoxLayout()
+        margin_h = int(tokens.GAP_6 * scale)
+        margin_v = int(tokens.GAP_4 * scale)
+        grid_spacing = int(tokens.GAP_8 * scale)
         progress_grid.setContentsMargins(
-            tokens.GAP_6, tokens.GAP_4,
-            tokens.GAP_6, tokens.GAP_4
+            margin_h, margin_v,
+            margin_h, margin_v
         )
-        progress_grid.setSpacing(tokens.GAP_8)
+        progress_grid.setSpacing(grid_spacing)
         
         self.progress_labels = []
         
@@ -140,7 +152,7 @@ class NaverCafeControlWidget(QWidget):
             if i < len(self.progress_steps) - 1:
                 arrow_label = QLabel("→")
                 arrow_label.setAlignment(Qt.AlignCenter)
-                arrow_font_size = tokens.get_font_size('small')
+                arrow_font_size = int(tokens.get_font_size('small') * scale)
                 arrow_label.setStyleSheet(f"""
                     QLabel {{
                         color: {ModernStyle.COLORS['text_muted']};
@@ -153,17 +165,18 @@ class NaverCafeControlWidget(QWidget):
         progress_container.setLayout(progress_grid)
         layout.addWidget(progress_container)
         
-        # 상태 메시지
+        # 상태 메시지 - 반응형 스케일링 적용
         self.status_label = QLabel("추출 대기 중...")
         self.status_label.setAlignment(Qt.AlignCenter)
-        status_font_size = tokens.get_font_size('normal')
+        status_font_size = int(tokens.get_font_size('normal') * scale)
+        status_border_radius = int(tokens.GAP_4 * scale)
         self.status_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['primary']};
                 font-size: {status_font_size}px;
                 font-weight: 600;
                 background-color: rgba(59, 130, 246, 0.1);
-                border-radius: {tokens.GAP_4}px;
+                border-radius: {status_border_radius}px;
             }}
         """)
         layout.addWidget(self.status_label)
@@ -172,7 +185,9 @@ class NaverCafeControlWidget(QWidget):
         return card
     
     def update_step_display(self, label, step, status):
-        """단계 표시 업데이트"""
+        """단계 표시 업데이트 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
         if status == "pending":
             color = ModernStyle.COLORS['text_muted']
             bg_color = "transparent"
@@ -187,17 +202,24 @@ class NaverCafeControlWidget(QWidget):
             bg_color = f"rgba(239, 68, 68, 0.2)"
         
         label.setText(f"{step['icon']}\n{step['name']}")
+        # 반응형 스케일링 적용
+        border_radius = int(tokens.GAP_3 * scale)
+        padding_v = int(tokens.GAP_6 * scale)
+        padding_h = int(tokens.GAP_4 * scale)
+        font_size = int(tokens.get_font_size('small') * scale)
+        min_width = int(tokens.GAP_50 * scale)
+        max_width = int(tokens.GAP_60 * scale)
         label.setStyleSheet(f"""
             QLabel {{
                 color: {color};
                 background-color: {bg_color};
-                border-radius: {tokens.GAP_3}px;
-                padding: {tokens.GAP_6}px {tokens.GAP_4}px;
-                font-size: {tokens.get_font_size('small')}px;
+                border-radius: {border_radius}px;
+                padding: {padding_v}px {padding_h}px;
+                font-size: {font_size}px;
                 font-weight: 600;
                 text-align: center;
-                min-width: {tokens.GAP_50}px;
-                max-width: {tokens.GAP_60}px;
+                min-width: {min_width}px;
+                max-width: {max_width}px;
             }}
         """)
     
@@ -256,28 +278,38 @@ class NaverCafeControlWidget(QWidget):
         self.update_progress_step(0, "active", "카페를 검색해주세요")
         
     def create_search_card(self) -> ModernCard:
-        """카페 검색 카드"""
+        """카페 검색 카드 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         card = ModernCard("🔍 카페 검색")
         layout = QVBoxLayout()
-        layout.setSpacing(tokens.GAP_8)
+        layout_spacing = int(tokens.GAP_8 * scale)
+        layout.setSpacing(layout_spacing)
         
-        # 검색어 입력과 검색 버튼을 가로로 배치
+        # 검색어 입력과 검색 버튼을 가로로 배치 - 반응형 스케일링 적용
         search_input_layout = QHBoxLayout()
-        search_input_layout.setSpacing(tokens.GAP_8)
+        input_layout_spacing = int(tokens.GAP_8 * scale)
+        search_input_layout.setSpacing(input_layout_spacing)
         
-        # 검색어 입력
+        # 검색어 입력 - 반응형 스케일링 적용
         self.search_input = QLineEdit()
         self.search_input.setPlaceholderText("카페명 또는 URL을 입력하세요")
-        # 입력 필드와 버튼의 높이를 동일하게 설정
-        input_height = tokens.GAP_36  # 패딩 포함한 총 높이
+        # 입력 필드와 버튼의 높이를 동일하게 설정 - 반응형 스케일링 적용
+        input_height = int(tokens.GAP_36 * scale)  # 패딩 포함한 총 높이
+        border_radius = int(tokens.GAP_8 * scale)
+        padding_v = int(tokens.GAP_8 * scale)
+        padding_h = int(tokens.GAP_10 * scale)
+        font_size = int(tokens.get_font_size('normal') * scale)
+        border_width = int(2 * scale)
         self.search_input.setFixedHeight(input_height)
         self.search_input.setStyleSheet(f"""
             QLineEdit {{
                 background-color: {ModernStyle.COLORS['bg_input']};
-                border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: {tokens.GAP_8}px;
-                padding: {tokens.GAP_8}px {tokens.GAP_10}px;
-                font-size: {tokens.get_font_size('normal')}px;
+                border: {border_width}px solid {ModernStyle.COLORS['border']};
+                border-radius: {border_radius}px;
+                padding: {padding_v}px {padding_h}px;
+                font-size: {font_size}px;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
             QLineEdit:focus {{
@@ -300,21 +332,31 @@ class NaverCafeControlWidget(QWidget):
         return card
         
     def create_cafe_card(self) -> ModernCard:
-        """카페 선택 카드"""
+        """카페 선택 카드 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         card = ModernCard("📍 카페 선택")
         layout = QVBoxLayout()
-        layout.setSpacing(tokens.GAP_8)
+        layout_spacing = int(tokens.GAP_8 * scale)
+        layout.setSpacing(layout_spacing)
         
-        # 카페 선택 드롭다운
+        # 카페 선택 드롭다운 - 반응형 스케일링 적용
         self.cafe_combo = QComboBox()
+        combo_padding_v = int(tokens.GAP_8 * scale)
+        combo_padding_h = int(tokens.GAP_12 * scale)
+        combo_border_width = int(2 * scale)
+        combo_border_radius = int(tokens.GAP_6 * scale)
+        combo_font_size = int(tokens.get_font_size('normal') * scale)
+        combo_min_height = int(tokens.GAP_10 * scale)
         self.cafe_combo.setStyleSheet(f"""
             QComboBox {{
-                padding: {tokens.GAP_8}px {tokens.GAP_12}px;
-                border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: {tokens.GAP_6}px;
+                padding: {combo_padding_v}px {combo_padding_h}px;
+                border: {combo_border_width}px solid {ModernStyle.COLORS['border']};
+                border-radius: {combo_border_radius}px;
                 background-color: {ModernStyle.COLORS['bg_input']};
-                font-size: {tokens.get_font_size('normal')}px;
-                min-height: {tokens.GAP_10}px;
+                font-size: {combo_font_size}px;
+                min-height: {combo_min_height}px;
             }}
             QComboBox:focus {{
                 border-color: {ModernStyle.COLORS['primary']};
@@ -322,19 +364,24 @@ class NaverCafeControlWidget(QWidget):
         """)
         layout.addWidget(self.cafe_combo)
         
-        # 선택된 카페 표시 라벨
+        # 선택된 카페 표시 라벨 - 반응형 스케일링 적용
         self.selected_cafe_label = QLabel("")
         self.selected_cafe_label.setWordWrap(True)  # 텍스트 줄바꿈 허용
+        label_font_size = int(tokens.get_font_size('normal') * scale)
+        label_padding = int(tokens.GAP_8 * scale)
+        label_border_radius = int(tokens.GAP_4 * scale)
+        label_margin_top = int(tokens.GAP_5 * scale)
+        label_min_height = int(tokens.GAP_10 * scale)
         self.selected_cafe_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['success']};
                 font-weight: 600;
-                font-size: {tokens.get_font_size('normal')}px;
-                padding: {tokens.GAP_8}px;
+                font-size: {label_font_size}px;
+                padding: {label_padding}px;
                 background-color: rgba(16, 185, 129, 0.1);
-                border-radius: {tokens.GAP_4}px;
-                margin-top: {tokens.GAP_5}px;
-                min-height: {tokens.GAP_10}px;
+                border-radius: {label_border_radius}px;
+                margin-top: {label_margin_top}px;
+                min-height: {label_min_height}px;
             }}
         """)
         self.selected_cafe_label.setVisible(False)  # 처음에는 숨김
@@ -348,26 +395,33 @@ class NaverCafeControlWidget(QWidget):
         return card
     
     def create_loading_widget(self) -> QWidget:
-        """로딩 상태 표시 위젯 생성 (원본과 동일)"""
+        """로딩 상태 표시 위젯 생성 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         loading_widget = QWidget()
         loading_layout = QHBoxLayout()
-        loading_layout.setContentsMargins(tokens.GAP_8, 0, 0, 0)
-        loading_layout.setSpacing(tokens.GAP_6)
+        margin_left = int(tokens.GAP_8 * scale)
+        layout_spacing = int(tokens.GAP_6 * scale)
+        loading_layout.setContentsMargins(margin_left, 0, 0, 0)
+        loading_layout.setSpacing(layout_spacing)
         
-        # 로딩 스피너 (회전하는 이모지)
+        # 로딩 스피너 (회전하는 이모지) - 반응형 스케일링 적용
         self.loading_spinner = QLabel("🔄")
+        spinner_font_size = int(tokens.get_font_size('normal') * scale)
         self.loading_spinner.setStyleSheet(f"""
             QLabel {{
-                font-size: {tokens.get_font_size('normal')}px;
+                font-size: {spinner_font_size}px;
                 color: {ModernStyle.COLORS['primary']};
             }}
         """)
         
-        # 로딩 메시지
+        # 로딩 메시지 - 반응형 스케일링 적용
         self.loading_message = QLabel("게시판 로딩 중...")
+        message_font_size = int(tokens.get_font_size('small') * scale)
         self.loading_message.setStyleSheet(f"""
             QLabel {{
-                font-size: {tokens.get_font_size('small')}pt;
+                font-size: {message_font_size}px;
                 color: {ModernStyle.COLORS['text_secondary']};
                 font-style: italic;
             }}
@@ -407,29 +461,38 @@ class NaverCafeControlWidget(QWidget):
         self.loading_spinner.setText("🔄")
         
     def create_board_card(self) -> ModernCard:
-        """게시판 선택 카드"""
+        """게시판 선택 카드 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         card = ModernCard("📋 게시판 선택")
         layout = QVBoxLayout()
-        layout.setSpacing(tokens.GAP_8)
+        layout_spacing = int(tokens.GAP_8 * scale)
+        layout.setSpacing(layout_spacing)
         
         # 게시판 드롭다운
         self.board_combo = QComboBox()
         self.board_combo.setStyleSheet(self.cafe_combo.styleSheet())
         self.board_combo.setEnabled(False)  # 처음엔 비활성화
         
-        # 선택된 게시판 정보
+        # 선택된 게시판 정보 - 반응형 스케일링 적용
         self.selected_board_label = QLabel("")
         self.selected_board_label.setWordWrap(True)  # 텍스트 줄바꿈 허용
+        board_label_font_size = int(tokens.get_font_size('normal') * scale)
+        board_label_padding = int(tokens.GAP_8 * scale)
+        board_label_border_radius = int(tokens.GAP_4 * scale)
+        board_label_margin_top = int(tokens.GAP_5 * scale)
+        board_label_min_height = int(tokens.GAP_10 * scale)
         self.selected_board_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['success']};
                 font-weight: 600;
-                font-size: {tokens.get_font_size('normal')}px;
-                padding: {tokens.GAP_8}px;
+                font-size: {board_label_font_size}px;
+                padding: {board_label_padding}px;
                 background-color: rgba(16, 185, 129, 0.1);
-                border-radius: {tokens.GAP_4}px;
-                margin-top: {tokens.GAP_5}px;
-                min-height: {tokens.GAP_10}px;
+                border-radius: {board_label_border_radius}px;
+                margin-top: {board_label_margin_top}px;
+                min-height: {board_label_min_height}px;
             }}
         """)
         self.selected_board_label.setVisible(False)
@@ -441,7 +504,10 @@ class NaverCafeControlWidget(QWidget):
         return card
         
     def create_settings_card(self) -> ModernCard:
-        """추출 설정 카드"""
+        """추출 설정 카드 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         card = ModernCard("⚙️ 추출 설정")
         layout = QFormLayout()
         
@@ -456,15 +522,23 @@ class NaverCafeControlWidget(QWidget):
         self.end_page_spin.setMaximum(9999)
         self.end_page_spin.setValue(10)  # config 제거로 하드코딩
         
+        # 반응형 스케일링 적용
+        spin_padding = int(tokens.GAP_8 * scale)
+        spin_border_width = int(2 * scale)
+        spin_border_radius = int(tokens.GAP_6 * scale)
+        spin_font_size = int(tokens.get_font_size('normal') * scale)
+        spin_min_height = int(tokens.GAP_10 * scale)
+        spin_button_width = int(tokens.GAP_16 * scale)
+        
         for spin in [self.start_page_spin, self.end_page_spin]:
             spin.setStyleSheet(f"""
                 QSpinBox {{
-                    padding: {tokens.GAP_8}px;
-                    border: 2px solid {ModernStyle.COLORS['border']};
-                    border-radius: {tokens.GAP_6}px;
+                    padding: {spin_padding}px;
+                    border: {spin_border_width}px solid {ModernStyle.COLORS['border']};
+                    border-radius: {spin_border_radius}px;
                     background-color: {ModernStyle.COLORS['bg_primary']};
-                    font-size: {tokens.get_font_size('normal')}px;
-                    min-height: {tokens.GAP_10}px;
+                    font-size: {spin_font_size}px;
+                    min-height: {spin_min_height}px;
                 }}
                 QSpinBox:focus {{
                     border-color: {ModernStyle.COLORS['primary']};
@@ -472,14 +546,14 @@ class NaverCafeControlWidget(QWidget):
                 QSpinBox::up-button {{
                     subcontrol-origin: border;
                     subcontrol-position: top right;
-                    width: {tokens.GAP_16}px;
+                    width: {spin_button_width}px;
                     background-color: rgba(240, 240, 240, 0.7);
                     border-bottom: 1px solid #ccc;
                 }}
                 QSpinBox::down-button {{
                     subcontrol-origin: border;
                     subcontrol-position: bottom right;
-                    width: {tokens.GAP_16}px;
+                    width: {spin_button_width}px;
                     background-color: rgba(240, 240, 240, 0.7);
                     border-top: 1px solid #ccc;
                 }}
@@ -498,19 +572,24 @@ class NaverCafeControlWidget(QWidget):
         return card
         
     def create_control_buttons(self) -> QWidget:
-        """제어 버튼들"""
+        """제어 버튼들 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         button_container = QWidget()
         button_layout = QVBoxLayout(button_container)
-        button_layout.setSpacing(tokens.GAP_12)
+        button_spacing = int(tokens.GAP_12 * scale)
+        button_layout.setSpacing(button_spacing)
         
-        # 추출 시작 버튼 - toolbox 공용 컴포넌트 사용
+        # 추출 시작 버튼 - toolbox 공용 컴포넌트 사용, 반응형 스케일링 적용
         self.extract_button = ModernSuccessButton("🚀 추출 시작")
-        self.extract_button.setFixedHeight(tokens.GAP_15)
+        button_height = int(tokens.GAP_15 * scale)
+        self.extract_button.setFixedHeight(button_height)
         self.extract_button.setEnabled(False)  # 처음엔 비활성화
         
-        # 정지 버튼 - toolbox 공용 컴포넌트 사용 (활성화 시에만 빨간색)
+        # 정지 버튼 - toolbox 공용 컴포넌트 사용 (활성화 시에만 빨간색), 반응형 스케일링 적용
         self.stop_button = ModernCancelButton("⏹ 정지")
-        self.stop_button.setFixedHeight(tokens.GAP_15)
+        self.stop_button.setFixedHeight(button_height)
         self.stop_button.setEnabled(False)  # 처음엔 비활성화
         
         button_layout.addWidget(self.extract_button)
@@ -830,17 +909,22 @@ class NaverCafeControlWidget(QWidget):
                     self.update_progress_step(i, "error", "사용자에 의해 중지됨")
                     break
             
-            # 정지 상태 메시지 표시
+            # 정지 상태 메시지 표시 - 반응형 스케일링 적용
             self.status_label.setText("추출이 중지되었습니다")
+            scale = tokens.get_screen_scale_factor()
+            stop_font_size = int(tokens.get_font_size('normal') * scale)
+            stop_padding = int(tokens.GAP_8 * scale)
+            stop_border_radius = int(tokens.GAP_4 * scale)
+            stop_margin = int(tokens.GAP_3 * scale)
             self.status_label.setStyleSheet(f"""
                 QLabel {{
                     color: {ModernStyle.COLORS['danger']};
-                    font-size: {tokens.get_font_size('normal')}px;
+                    font-size: {stop_font_size}px;
                     font-weight: 600;
-                    padding: {tokens.GAP_8}px;
+                    padding: {stop_padding}px;
                     background-color: rgba(239, 68, 68, 0.1);
-                    border-radius: {tokens.GAP_4}px;
-                    margin: {tokens.GAP_3}px 0;
+                    border-radius: {stop_border_radius}px;
+                    margin: {stop_margin}px 0;
                 }}
             """)
             

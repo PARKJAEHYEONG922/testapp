@@ -54,10 +54,10 @@ class AddKeywordsDialog(QDialog):
         main_layout.setContentsMargins(margin_h, margin_v, margin_h, margin_h)
         main_layout.setSpacing(spacing)
         
-        # 헤더
+        # 헤더 - 반응형 스케일링 적용
         header_label = QLabel("📝 키워드 추가")
-        header_font_size = tokens.get_font_size('title')
-        header_padding = tokens.GAP_4
+        header_font_size = int(tokens.get_font_size('title') * scale)
+        header_padding = int(tokens.GAP_4 * scale)
         header_label.setStyleSheet(f"""
             QLabel {{
                 color: #2563eb;
@@ -69,10 +69,10 @@ class AddKeywordsDialog(QDialog):
         """)
         main_layout.addWidget(header_label)
         
-        # 설명
+        # 설명 - 반응형 스케일링 적용
         self.description_label = QLabel("추적할 키워드를 입력하세요")
-        desc_font_size = tokens.get_font_size('header')
-        desc_margin = tokens.GAP_10
+        desc_font_size = int(tokens.get_font_size('header') * scale)
+        desc_margin = int(tokens.GAP_10 * scale)
         self.description_label.setStyleSheet(f"""
             QLabel {{
                 color: #64748b;
@@ -95,10 +95,10 @@ class AddKeywordsDialog(QDialog):
         """)
         main_layout.addWidget(separator)
         
-        # 입력 라벨
+        # 입력 라벨 - 반응형 스케일링 적용
         input_label = QLabel("키워드 목록")
-        label_font_size = tokens.get_font_size('normal')
-        label_margin = tokens.GAP_4
+        label_font_size = int(tokens.get_font_size('normal') * scale)
+        label_margin = int(tokens.GAP_4 * scale)
         input_label.setStyleSheet(f"""
             QLabel {{
                 color: #1e293b;
@@ -109,13 +109,13 @@ class AddKeywordsDialog(QDialog):
         """)
         main_layout.addWidget(input_label)
         
-        # 키워드 입력 필드
+        # 키워드 입력 필드 - 반응형 스케일링 적용
         self.keywords_input = QTextEdit()
         self.keywords_input.setPlaceholderText("예:\n강아지 사료\n고양이 간식\n반려동물 장난감\n\n또는 쉼표로 구분: 강아지 사료, 고양이 간식, 반려동물 장난감")
-        input_font_size = tokens.get_font_size('normal')
-        input_padding = tokens.GAP_10
-        input_border_radius = tokens.GAP_6
-        input_height = 150  # 고정 높이
+        input_font_size = int(tokens.get_font_size('normal') * scale)
+        input_padding = int(tokens.GAP_10 * scale)
+        input_border_radius = int(tokens.GAP_6 * scale)
+        input_height = int(150 * scale)  # 반응형 높이
         self.keywords_input.setStyleSheet(f"""
             QTextEdit {{
                 border: 2px solid #e2e8f0;
@@ -136,15 +136,15 @@ class AddKeywordsDialog(QDialog):
         self.keywords_input.setMaximumHeight(input_height)
         main_layout.addWidget(self.keywords_input)
         
-        # 안내 텍스트
+        # 안내 텍스트 - 반응형 스케일링 적용
         help_label = QLabel("ℹ️ 각 줄에 하나씩 입력하거나 쉼표(,)로 구분해서 입력하세요")
         help_label.setWordWrap(True)
-        help_font_size = tokens.get_font_size('normal')
-        help_padding_v = tokens.GAP_6
-        help_padding_h = tokens.GAP_10
-        help_border_radius = tokens.GAP_6
-        help_margin_v = tokens.GAP_4
-        help_margin_bottom = tokens.GAP_10
+        help_font_size = int(tokens.get_font_size('normal') * scale)
+        help_padding_v = int(tokens.GAP_6 * scale)
+        help_padding_h = int(tokens.GAP_10 * scale)
+        help_border_radius = int(tokens.GAP_6 * scale)
+        help_margin_v = int(tokens.GAP_4 * scale)
+        help_margin_bottom = int(tokens.GAP_10 * scale)
         help_label.setStyleSheet(f"""
             QLabel {{
                 color: #64748b;
@@ -163,8 +163,8 @@ class AddKeywordsDialog(QDialog):
         button_layout = QHBoxLayout()
         button_layout.addStretch()
         
-        # 버튼들
-        button_width = tokens.GAP_120
+        # 버튼들 - 반응형 스케일링 적용
+        button_width = int(tokens.GAP_120 * scale)
         
         self.cancel_button = ModernCancelButton("취소")
         self.cancel_button.clicked.connect(self.reject)
@@ -281,9 +281,9 @@ class RankingTableWidget(QWidget):
         
         from PySide6.QtWidgets import QProgressBar, QSizePolicy
         
-        # 진행률 라벨
+        # 진행률 라벨 - 반응형 스케일링 적용
         self.progress_label = QLabel("작업 진행 중...")
-        progress_font_size = tokens.get_font_size('small')
+        progress_font_size = int(tokens.get_font_size('small') * scale)
         progress_font = QFont("맑은 고딕")
         progress_font.setPixelSize(progress_font_size)
         self.progress_label.setFont(progress_font)
@@ -1280,16 +1280,19 @@ class RankingTableWidget(QWidget):
             logger.error(f"키워드 '{keyword}' 월검색량 테이블 업데이트 실패: {e}")
     
     def setup_buttons(self, layout):
-        """하단 버튼들 설정"""
+        """하단 버튼들 설정 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         # 하단 버튼 영역
         button_layout = QHBoxLayout()
-        button_margin = tokens.GAP_10
-        button_spacing = tokens.GAP_10
+        button_margin = int(tokens.GAP_10 * scale)
+        button_spacing = int(tokens.GAP_10 * scale)
         button_layout.setContentsMargins(0, button_margin, 0, 0)
         button_layout.setSpacing(button_spacing)
         
         # 키워드 추가 버튼
-        button_width_add = tokens.GAP_120 + 20
+        button_width_add = int((tokens.GAP_120 + 20) * scale)
         self.add_keyword_button = ModernPrimaryButton("➕ 키워드추가")
         self.add_keyword_button.clicked.connect(self.add_keyword)
         self.add_keyword_button.setEnabled(False)  # 프로젝트 선택 시에만 활성화
@@ -1298,7 +1301,7 @@ class RankingTableWidget(QWidget):
         button_layout.addWidget(self.add_keyword_button)
         
         # 순위 확인 버튼
-        button_width = tokens.GAP_120
+        button_width = int(tokens.GAP_120 * scale)
         self.check_button = ModernSuccessButton("🔍 순위 확인")
         self.check_button.clicked.connect(self.check_rankings)
         self.check_button.setEnabled(False)  # 프로젝트 선택 시에만 활성화

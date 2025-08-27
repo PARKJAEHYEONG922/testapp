@@ -28,25 +28,29 @@ class NaverCafeWidget(QWidget):
         super().closeEvent(event)
         
     def setup_ui(self):
-        """UI 초기화"""
+        """UI 초기화 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(
-            tokens.GAP_20, tokens.GAP_20, 
-            tokens.GAP_20, tokens.GAP_20
-        )
-        main_layout.setSpacing(tokens.GAP_20)
+        margin = int(tokens.GAP_20 * scale)
+        spacing = int(tokens.GAP_20 * scale)
+        main_layout.setContentsMargins(margin, margin, margin, margin)
+        main_layout.setSpacing(spacing)
         
         # 헤더 섹션 (제목 + 사용법)
         self.setup_header(main_layout)
         
-        # 컨텐츠 레이아웃 (좌측 패널 + 우측 패널)
+        # 컨텐츠 레이아웃 (좌측 패널 + 우측 패널) - 반응형 스케일링 적용
         content_layout = QHBoxLayout()
-        content_layout.setSpacing(tokens.GAP_20)
+        content_spacing = int(tokens.GAP_20 * scale)
+        content_layout.setSpacing(content_spacing)
         
-        # 좌측 패널 (컨트롤 위젯)
+        # 좌측 패널 (컨트롤 위젯) - 반응형 스케일링 적용
         self.control_widget = NaverCafeControlWidget()
         # 좌측 패널 최대 너비 제한 (ResponsiveUI 스케일 값들 때문에 너무 커지는 것 방지)
-        self.control_widget.setMaximumWidth(600)
+        max_width = int(600 * scale)
+        self.control_widget.setMaximumWidth(max_width)
         
         # 우측 패널 (결과 위젯)
         self.results_widget = NaverCafeResultsWidget()

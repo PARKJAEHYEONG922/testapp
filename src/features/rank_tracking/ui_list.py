@@ -47,7 +47,7 @@ class ProjectListWidget(QWidget):
         
         # 헤더 (제목만)
         title_label = QLabel("📋 프로젝트 목록")
-        title_font_size = tokens.get_font_size('header')
+        title_font_size = int(tokens.get_font_size('header') * scale)
         title_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {title_font_size}px;
@@ -148,7 +148,7 @@ class ProjectListWidget(QWidget):
                 padding: {button_padding}px;
                 border-radius: {button_border_radius}px;
                 font-weight: 600;
-                font-size: {tokens.get_font_size('normal')}px;
+                font-size: {int(tokens.get_font_size('normal') * scale)}px;
             }}
             QPushButton:hover {{
                 background-color: {ModernStyle.COLORS['primary_hover']};

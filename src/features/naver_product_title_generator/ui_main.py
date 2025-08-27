@@ -37,10 +37,14 @@ class LeftPanel(QWidget):
         self.setup_ui()
         
     def setup_ui(self):
+        """UI 초기화 - 반응형 스케일링 적용"""
         layout = QVBoxLayout()
-        margin_h = tokens.GAP_12
-        margin_v = tokens.GAP_16
-        spacing = tokens.GAP_16
+        
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        margin_h = int(tokens.GAP_12 * scale)
+        margin_v = int(tokens.GAP_16 * scale)
+        spacing = int(tokens.GAP_16 * scale)
         layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
         layout.setSpacing(spacing)
         
@@ -57,10 +61,13 @@ class LeftPanel(QWidget):
         self.apply_styles()
         
     def create_progress_card(self):
-        """진행상황 표시 카드"""
+        """진행상황 표시 카드 - 반응형 스케일링 적용"""
         card = ModernCard("📊 진행상황")
         layout = QVBoxLayout(card)
-        margin = tokens.GAP_12
+        
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        margin = int(tokens.GAP_12 * scale)
         layout.setContentsMargins(margin, margin, margin, margin)
         
         # 현재 단계
@@ -82,21 +89,24 @@ class LeftPanel(QWidget):
         return card
         
     def create_input_card(self):
-        """핵심제품명 입력 카드"""
+        """핵심제품명 입력 카드 - 반응형 스케일링 적용"""
         from PySide6.QtWidgets import QTextEdit
         
         card = ModernCard("📝 핵심제품명 입력")
         layout = QVBoxLayout(card)
-        margin = tokens.GAP_12
-        spacing = tokens.GAP_10
+        
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        margin = int(tokens.GAP_12 * scale)
+        spacing = int(tokens.GAP_10 * scale)
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(spacing)
         
-        # 입력 필드 (확장된 크기)
+        # 입력 필드 (확장된 크기) - 반응형 스케일링 적용
         self.product_input = QTextEdit()
         self.product_input.setPlaceholderText("키워드를 입력해주세요 (엔터 또는 , 로 구분)")
-        min_height = 120
-        max_height = 150
+        min_height = int(120 * scale)
+        max_height = int(150 * scale)
         self.product_input.setMinimumHeight(min_height)
         self.product_input.setMaximumHeight(max_height)
         
@@ -106,13 +116,13 @@ class LeftPanel(QWidget):
         self.product_input.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         layout.addWidget(self.product_input)
         
-        # 버튼들
+        # 버튼들 - 반응형 스케일링 적용
         button_layout = QHBoxLayout()
-        button_spacing = tokens.GAP_8
+        button_spacing = int(tokens.GAP_8 * scale)
         button_layout.setSpacing(button_spacing)
         
         self.start_button = ModernPrimaryButton("🔍 분석시작")
-        button_height = tokens.GAP_40
+        button_height = int(tokens.GAP_40 * scale)
         self.start_button.setMinimumHeight(button_height)
         self.start_button.clicked.connect(self.on_start_analysis)
         button_layout.addWidget(self.start_button)
@@ -165,27 +175,31 @@ class LeftPanel(QWidget):
         self.next_button.setEnabled(next_)
         
     def apply_styles(self):
+        """스타일 적용 - 반응형 스케일링"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         self.setStyleSheet(f"""
             QWidget {{
                 background-color: {ModernStyle.COLORS['bg_primary']};
             }}
             QLabel[objectName="step_info"] {{
-                font-size: {tokens.get_font_size('large')}px;
+                font-size: {int(tokens.get_font_size('large') * scale)}px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['primary']};
-                margin: {tokens.GAP_4}px 0px;
+                margin: {int(tokens.GAP_4 * scale)}px 0px;
             }}
             QLabel[objectName="status_info"] {{
-                font-size: {tokens.get_font_size('normal')}px;
+                font-size: {int(tokens.get_font_size('normal') * scale)}px;
                 color: {ModernStyle.COLORS['text_secondary']};
-                margin: {tokens.GAP_6}px 0px;
+                margin: {int(tokens.GAP_6 * scale)}px 0px;
             }}
             QTextEdit {{
                 background-color: {ModernStyle.COLORS['bg_input']};
                 border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: {tokens.GAP_8}px;
-                padding: {tokens.GAP_16}px;
-                font-size: {tokens.get_font_size('normal')}px;
+                border-radius: {int(tokens.GAP_8 * scale)}px;
+                padding: {int(tokens.GAP_16 * scale)}px;
+                font-size: {int(tokens.get_font_size('normal') * scale)}px;
                 color: {ModernStyle.COLORS['text_primary']};
                 font-family: 'Segoe UI', sans-serif;
             }}
@@ -210,18 +224,22 @@ class RightPanel(QWidget):
         self.setup_ui()
         
     def setup_ui(self):
+        """UI 초기화 - 반응형 스케일링 적용"""
         layout = QVBoxLayout()
-        margin = tokens.GAP_20
-        spacing = tokens.GAP_15
+        
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        margin = int(tokens.GAP_20 * scale)
+        spacing = int(tokens.GAP_15 * scale)
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(spacing)
         
-        # 상단 네비게이션 버튼들
+        # 상단 네비게이션 버튼들 - 반응형 스케일링 적용
         nav_layout = QHBoxLayout()
         
         self.prev_button = ModernCancelButton("◀ 이전")
-        button_height = tokens.GAP_40
-        button_width = 120
+        button_height = int(tokens.GAP_40 * scale)
+        button_width = int(120 * scale)
         self.prev_button.setFixedHeight(button_height)
         self.prev_button.setFixedWidth(button_width)
         self.prev_button.setEnabled(False)
@@ -244,11 +262,11 @@ class RightPanel(QWidget):
         self.setup_step_widgets()
         layout.addWidget(self.content_stack, 1)  # 확장
         
-        # 하단 초기화 버튼
+        # 하단 초기화 버튼 - 반응형 스케일링 적용
         reset_layout = QHBoxLayout()
         
         self.reset_button = ModernCancelButton("🔄 초기화")
-        reset_button_height = tokens.GAP_40
+        reset_button_height = int(tokens.GAP_40 * scale)
         self.reset_button.setMinimumHeight(reset_button_height)
         self.reset_button.clicked.connect(self.reset_all.emit)
         reset_layout.addWidget(self.reset_button)
@@ -334,24 +352,27 @@ class NaverProductTitleGeneratorWidget(QWidget):
         self.setup_connections()
         
     def setup_ui(self):
-        """UI 구성 - 새로운 레이아웃"""
+        """UI 구성 - 새로운 레이아웃, 반응형 스케일링 적용"""
         main_layout = QVBoxLayout(self)
-        margin = tokens.GAP_20
-        spacing = tokens.GAP_20
+        
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        margin = int(tokens.GAP_20 * scale)
+        spacing = int(tokens.GAP_20 * scale)
         main_layout.setContentsMargins(margin, margin, margin, margin)
         main_layout.setSpacing(spacing)
         
         # 헤더 섹션 (제목 + 사용법)
         self.setup_header(main_layout)
         
-        # 콘텐츠 레이아웃 (왼쪽: 진행상황+입력, 오른쪽: 결과+네비게이션)
+        # 콘텐츠 레이아웃 (왼쪽: 진행상황+입력, 오른쪽: 결과+네비게이션) - 반응형 스케일링 적용
         content_layout = QHBoxLayout()
-        content_spacing = tokens.GAP_20
+        content_spacing = int(tokens.GAP_20 * scale)
         content_layout.setSpacing(content_spacing)
         
-        # 왼쪽 패널 (진행상황 + 핵심제품명 입력)
+        # 왼쪽 패널 (진행상황 + 핵심제품명 입력) - 반응형 스케일링 적용
         self.left_panel = LeftPanel()
-        left_panel_width = 320
+        left_panel_width = int(320 * scale)
         self.left_panel.setFixedWidth(left_panel_width)
         content_layout.addWidget(self.left_panel)
         
@@ -398,12 +419,12 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 스트레치로 공간 확보 (AI 모델 표시를 제일 오른쪽으로)
         header_layout.addStretch()
         
-        # 현재 AI 모델 표시 (제일 오른쪽)
+        # 현재 AI 모델 표시 (제일 오른쪽) - 반응형 스케일링 적용
         self.ai_model_label = QLabel("AI 모델: 설정 중...")
-        model_font_size = tokens.get_font_size('normal')
-        model_padding_v = tokens.GAP_6
-        model_padding_h = 12
-        model_border_radius = tokens.GAP_6
+        model_font_size = int(tokens.get_font_size('normal') * scale)
+        model_padding_v = int(tokens.GAP_6 * scale)
+        model_padding_h = int(12 * scale)
+        model_border_radius = int(tokens.GAP_6 * scale)
         self.ai_model_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {model_font_size}px;

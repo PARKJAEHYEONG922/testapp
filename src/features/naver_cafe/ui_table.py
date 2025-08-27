@@ -36,17 +36,26 @@ class NaverCafeResultsWidget(QWidget):
         self.load_initial_data()
         
     def setup_ui(self):
-        """UI 초기화"""
-        layout = QVBoxLayout(self)
-        layout.setSpacing(tokens.GAP_16)
+        """UI 초기화 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
         
-        # 탭 위젯
+        layout = QVBoxLayout(self)
+        layout_spacing = int(tokens.GAP_16 * scale)
+        layout.setSpacing(layout_spacing)
+        
+        # 탭 위젯 - 반응형 스케일링 적용
         self.tabs = QTabWidget()
-        tab_radius = tokens.RADIUS_SM
-        tab_padding = tokens.GAP_10
+        tab_radius = int(tokens.RADIUS_SM * scale)
+        tab_padding = int(tokens.GAP_10 * scale)
+        tab_border_width = int(2 * scale)
+        tab_padding_v = int(tokens.GAP_12 * scale)
+        tab_padding_h = int(tokens.GAP_20 * scale)
+        tab_margin_right = int(tokens.GAP_2 * scale)
+        tab_font_size = int(tokens.get_font_size('normal') * scale)
         self.tabs.setStyleSheet(f"""
             QTabWidget::pane {{
-                border: 2px solid {ModernStyle.COLORS['border']};
+                border: {tab_border_width}px solid {ModernStyle.COLORS['border']};
                 border-radius: {tab_radius}px;
                 background-color: {ModernStyle.COLORS['bg_card']};
                 padding: {tab_padding}px;
@@ -54,12 +63,12 @@ class NaverCafeResultsWidget(QWidget):
             QTabBar::tab {{
                 background-color: {ModernStyle.COLORS['bg_secondary']};
                 color: {ModernStyle.COLORS['text_secondary']};
-                padding: {tokens.GAP_12}px {tokens.GAP_20}px;
-                margin-right: {tokens.GAP_2}px;
+                padding: {tab_padding_v}px {tab_padding_h}px;
+                margin-right: {tab_margin_right}px;
                 border-top-left-radius: {tab_radius}px;
                 border-top-right-radius: {tab_radius}px;
                 font-weight: 600;
-                font-size: {tokens.get_font_size('normal')}px;
+                font-size: {tab_font_size}px;
             }}
             QTabBar::tab:selected {{
                 background-color: {ModernStyle.COLORS['primary']};
@@ -95,10 +104,14 @@ class NaverCafeResultsWidget(QWidget):
             logger.error(f"초기 데이터 로드 실패: {e}")
         
     def create_users_tab(self) -> QWidget:
-        """추출된 사용자 탭"""
+        """추출된 사용자 탭 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         tab = QWidget()
         layout = QVBoxLayout(tab)
-        layout.setSpacing(tokens.GAP_16)
+        layout_spacing = int(tokens.GAP_16 * scale)
+        layout.setSpacing(layout_spacing)
         
         # 사용자 테이블 (ModernTableWidget 사용 - 체크박스 없음)
         self.users_table = ModernTableWidget(
@@ -107,34 +120,37 @@ class NaverCafeResultsWidget(QWidget):
             has_header_checkbox=False
         )
         
-        # 컬럼 너비 설정 (체크박스가 없으므로 자유롭게 설정 가능)
+        # 컬럼 너비 설정 (체크박스가 없으므로 자유롭게 설정 가능) - 반응형 스케일링 적용
         header = self.users_table.horizontalHeader()
-        header.resizeSection(0, tokens.GAP_50)   # 번호 
-        header.resizeSection(1, 150)  # 사용자 ID
-        header.resizeSection(2, 150)  # 닉네임
-        header.resizeSection(3, 150)  # 추출 시간
+        header.resizeSection(0, int(tokens.GAP_50 * scale))   # 번호 
+        header.resizeSection(1, int(150 * scale))  # 사용자 ID
+        header.resizeSection(2, int(150 * scale))  # 닉네임
+        header.resizeSection(3, int(150 * scale))  # 추출 시간
         
         layout.addWidget(self.users_table)
         
         # 하단 통계 및 버튼
         bottom_layout = QHBoxLayout()
         
-        # 통계 라벨
+        # 통계 라벨 - 반응형 스케일링 적용
         self.users_count_label = QLabel("추출된 사용자: 0명")
+        users_count_font_size = int(tokens.get_font_size('large') * scale)
         self.users_count_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 16px;
+                font-size: {users_count_font_size}px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['primary']};
             }}
         """)
         
-        # 버튼들
+        # 버튼들 - 반응형 스케일링 적용
         self.copy_button = ModernButton("📋 복사", "secondary")
-        self.copy_button.setMinimumSize(130, int(36 * 0.8))  # 너비 130, 높이는 0.8배 (130x29)
+        button_width = int(130 * scale)
+        button_height = int(tokens.GAP_30 * scale)
+        self.copy_button.setMinimumSize(button_width, button_height)  # 너비, 높이는 0.8배
         
         self.save_button = ModernButton("💾 저장", "success")
-        self.save_button.setMinimumSize(130, int(36 * 0.8))  # 너비 130, 높이는 0.8배 (130x29)
+        self.save_button.setMinimumSize(button_width, button_height)  # 너비, 높이는 0.8배
         
         bottom_layout.addWidget(self.users_count_label)
         bottom_layout.addStretch()
@@ -150,16 +166,20 @@ class NaverCafeResultsWidget(QWidget):
         return tab
         
     def create_history_tab(self) -> QWidget:
-        """추출 기록 탭"""
+        """추출 기록 탭 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         tab = QWidget()
         layout = QVBoxLayout(tab)
-        layout.setSpacing(tokens.GAP_16)
+        layout_spacing = int(tokens.GAP_16 * scale)
+        layout.setSpacing(layout_spacing)
         
         # 상단 정보
         top_layout = QHBoxLayout()
         
         self.history_count_label = QLabel("총 기록: 0개")
-        history_font_size = tokens.get_font_size('normal')
+        history_font_size = int(tokens.get_font_size('normal') * scale)
         self.history_count_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {history_font_size}px;
@@ -185,14 +205,14 @@ class NaverCafeResultsWidget(QWidget):
             has_header_checkbox=True
         )
         
-        # 컬럼 너비 설정 (체크박스 컬럼 제외하고 나머지만 설정)
+        # 컬럼 너비 설정 (체크박스 컬럼 제외하고 나머지만 설정) - 반응형 스케일링 적용
         history_header = self.history_table.horizontalHeader()
         # history_header.resizeSection(0, 80)   # 선택 체크박스 - ModernTableWidget에서 자동 처리
-        history_header.resizeSection(1, 110)  # 날짜 + 시간
-        history_header.resizeSection(2, 140)  # 카페명
-        history_header.resizeSection(3, 130)  # 게시판명 
-        history_header.resizeSection(4, 80)   # 추출수
-        history_header.resizeSection(5, 100)  # 페이지
+        history_header.resizeSection(1, int(110 * scale))  # 날짜 + 시간
+        history_header.resizeSection(2, int(140 * scale))  # 카페명
+        history_header.resizeSection(3, int(130 * scale))  # 게시판명 
+        history_header.resizeSection(4, int(80 * scale))   # 추출수
+        history_header.resizeSection(5, int(100 * scale))  # 페이지
         
         # 행 높이는 ModernTableWidget 기본값(35px) 사용
         
@@ -377,86 +397,104 @@ class NaverCafeResultsWidget(QWidget):
             self.export_users_data_internal(users_data, format_type, self)
     
     def show_save_format_dialog(self, users_count: int) -> str:
-        """저장 포맷 선택 다이얼로그 표시 - UI 레이어 책임"""
+        """저장 포맷 선택 다이얼로그 표시 - UI 레이어 책임, 반응형 스케일링 적용"""
         try:
+            # 화면 스케일 팩터 가져오기
+            scale = tokens.get_screen_scale_factor()
+            
             # 원본과 동일한 저장 방식 선택 다이얼로그
             dialog = QDialog(self)
             dialog.setWindowTitle("저장 방식 선택")
-            dialog.setFixedSize(600, 300)
+            dialog_width = int(600 * scale)
+            dialog_height = int(300 * scale)
+            dialog.setFixedSize(dialog_width, dialog_height)
             dialog.setModal(True)
             
-            # 레이아웃
+            # 레이아웃 - 반응형 스케일링 적용
             layout = QVBoxLayout(dialog)
-            layout.setSpacing(20)
-            layout.setContentsMargins(30, 30, 30, 30)
+            layout_spacing = int(20 * scale)
+            margin = int(30 * scale)
+            layout.setSpacing(layout_spacing)
+            layout.setContentsMargins(margin, margin, margin, margin)
             
-            # 제목
+            # 제목 - 반응형 스케일링 적용
             title_label = QLabel("선택된 기록의 저장 방식을 선택해주세요")
-            title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #2d3748;")
+            title_font_size = int(16 * scale)
+            title_label.setStyleSheet(f"font-size: {title_font_size}px; font-weight: bold; color: #2d3748;")
             layout.addWidget(title_label)
             
-            # 설명
+            # 설명 - 반응형 스케일링 적용
             desc_label = QLabel(f"• Excel: 사용자ID, 닉네임 등 전체 정보\n• Meta CSV: 이메일 형태로 Meta 광고 활용 가능\n• 사용자: {users_count}명")
-            desc_label.setStyleSheet("font-size: 12px; color: #4a5568; line-height: 1.4;")
+            desc_font_size = int(12 * scale)
+            desc_label.setStyleSheet(f"font-size: {desc_font_size}px; color: #4a5568; line-height: 1.4;")
             layout.addWidget(desc_label)
             
-            # 버튼 레이아웃
+            # 버튼 레이아웃 - 반응형 스케일링 적용
             button_layout = QHBoxLayout()
-            button_layout.setSpacing(20)
-            button_layout.setContentsMargins(20, 0, 20, 0)
+            button_spacing = int(20 * scale)
+            button_margin = int(20 * scale)
+            button_layout.setSpacing(button_spacing)
+            button_layout.setContentsMargins(button_margin, 0, button_margin, 0)
             
+            # 버튼들 - 반응형 스케일링 적용
             excel_button = QPushButton("📊 Excel 파일")
-            excel_button.setStyleSheet("""
-                QPushButton {
+            button_padding_v = int(12 * scale)
+            button_padding_h = int(20 * scale)
+            button_border_radius = int(8 * scale)
+            button_font_size = int(14 * scale)
+            button_min_width = int(100 * scale)
+            button_min_height = int(40 * scale)
+            excel_button.setStyleSheet(f"""
+                QPushButton {{
                     background-color: #3182ce;
                     color: white;
                     border: none;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-size: 14px;
+                    padding: {button_padding_v}px {button_padding_h}px;
+                    border-radius: {button_border_radius}px;
+                    font-size: {button_font_size}px;
                     font-weight: 600;
-                    min-width: 100px;
-                    min-height: 40px;
-                }
-                QPushButton:hover {
+                    min-width: {button_min_width}px;
+                    min-height: {button_min_height}px;
+                }}
+                QPushButton:hover {{
                     background-color: #2c5aa0;
-                }
+                }}
             """)
             
             meta_button = QPushButton("📧 Meta CSV")
-            meta_button.setStyleSheet("""
-                QPushButton {
+            meta_button.setStyleSheet(f"""
+                QPushButton {{
                     background-color: #e53e3e;
                     color: white;
                     border: none;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-size: 14px;
+                    padding: {button_padding_v}px {button_padding_h}px;
+                    border-radius: {button_border_radius}px;
+                    font-size: {button_font_size}px;
                     font-weight: 600;
-                    min-width: 100px;
-                    min-height: 40px;
-                }
-                QPushButton:hover {
+                    min-width: {button_min_width}px;
+                    min-height: {button_min_height}px;
+                }}
+                QPushButton:hover {{
                     background-color: #c53030;
-                }
+                }}
             """)
             
             cancel_button = QPushButton("취소")
-            cancel_button.setStyleSheet("""
-                QPushButton {
+            cancel_button.setStyleSheet(f"""
+                QPushButton {{
                     background-color: #718096;
                     color: white;
                     border: none;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-size: 14px;
+                    padding: {button_padding_v}px {button_padding_h}px;
+                    border-radius: {button_border_radius}px;
+                    font-size: {button_font_size}px;
                     font-weight: 600;
-                    min-width: 100px;
-                    min-height: 40px;
-                }
-                QPushButton:hover {
+                    min-width: {button_min_width}px;
+                    min-height: {button_min_height}px;
+                }}
+                QPushButton:hover {{
                     background-color: #4a5568;
-                }
+                }}
             """)
             
             button_layout.addWidget(excel_button)
