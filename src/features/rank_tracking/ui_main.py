@@ -1141,9 +1141,9 @@ class RankTrackingWidget(QWidget):
         
         # 화면 스케일 팩터 가져오기
         scale = tokens.get_screen_scale_factor()
-        margin = int(tokens.GAP_16 * scale)
+        margin_v = int(tokens.GAP_16 * scale)  # 상하 여백
         spacing = int(tokens.GAP_10 * scale)
-        main_layout.setContentsMargins(margin, margin, margin, margin)
+        main_layout.setContentsMargins(0, margin_v, 0, margin_v)  # 좌우 여백 제거, 상하만 유지
         main_layout.setSpacing(spacing)
         
         # 헤더 (제목 + 사용법 툴팁)
@@ -1154,8 +1154,13 @@ class RankTrackingWidget(QWidget):
         content_layout.setContentsMargins(0, 0, 0, 0)
         content_layout.setSpacing(spacing)
         
-        # 스플리터로 좌우 분할
+        # 스플리터로 좌우 분할 - 반응형 적용
         splitter = QSplitter(Qt.Horizontal)
+        # 스플리터 핸들 너비 스케일 적용
+        handle_width = int(6 * scale)  # 기본 6px에 스케일 적용
+        splitter.setHandleWidth(handle_width)
+        # 스플리터 여백 제거
+        splitter.setContentsMargins(0, 0, 0, 0)
         
         # 좌측: 프로젝트 목록 - 반응형 너비 적용
         sidebar_width = int(220 * scale)
@@ -1170,9 +1175,8 @@ class RankTrackingWidget(QWidget):
         # 우측: 수직 레이아웃 (기본정보 + 키워드 테이블) - 반응형 적용
         right_widget = QWidget()
         right_layout = QVBoxLayout()
-        right_margin = int(tokens.GAP_6 * scale)
         right_spacing = int(tokens.GAP_10 * scale)
-        right_layout.setContentsMargins(right_margin, right_margin, right_margin, right_margin)
+        right_layout.setContentsMargins(0, 0, 0, 0)  # 좌우 여백 제거
         right_layout.setSpacing(right_spacing)
         
         # 기본정보 영역 (위쪽)
@@ -1251,13 +1255,14 @@ class RankTrackingWidget(QWidget):
                 background-color: #F8F9FA;
                 border-radius: {frame_border_radius}px;
                 border: 1px solid {ModernStyle.COLORS['border']};
-                padding: {frame_padding}px;
             }}
         """)
         
         layout = QGridLayout()
         grid_spacing = int(tokens.GAP_6 * scale)
         grid_v_spacing = int(tokens.GAP_6 * scale)
+        # 프레임 패딩을 레이아웃 마진으로 적용
+        layout.setContentsMargins(frame_padding, frame_padding, frame_padding, frame_padding)
         layout.setSpacing(grid_spacing)
         layout.setVerticalSpacing(grid_v_spacing)
         

@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QTableWidget, QTableWidgetItem, QHeaderView, 
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox
 )
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtGui import QFont
 
 from .modern_style import ModernStyle
@@ -56,6 +56,7 @@ class ModernTableWidget(QTableWidget):
         self.has_header_checkbox = has_header_checkbox
         self._updating_header = False  # 헤더 업데이트 중복 방지
         self.header_checkbox = None  # 헤더 체크박스 위젯
+        self._base_widths = None  # 1920px 기준 컬럼 너비
         
         self.setup_table()
         self.setup_styling()
@@ -78,6 +79,12 @@ class ModernTableWidget(QTableWidget):
         header.setMinimumSectionSize(int(50 * scale))   # 최소 크기 스케일링
         header.setMinimumHeight(int(40 * scale))  # 헤더 높이 스케일링
         header.setMaximumHeight(int(40 * scale))  # 헤더 높이 스케일링
+        
+        # 헤더 폰트 직접 설정 (스케일링 적용)
+        header_font = QFont()
+        header_font.setPixelSize(tokens.get_font_size('normal'))
+        header_font.setWeight(QFont.Weight.Bold)
+        header.setFont(header_font)
         
         # 🔧 FIX: 모든 컬럼 너비 고정 (원본과 동일하게 설정)
         # 원본은 모든 컬럼이 고정된 너비를 가지고 있음
@@ -120,6 +127,14 @@ class ModernTableWidget(QTableWidget):
     
     def setup_styling(self):
         """파워링크 이전기록 테이블 스타일 기준으로 완전 통일"""
+        # 스케일링 적용을 위한 크기 계산
+        scale = tokens.get_screen_scale_factor()
+        item_padding = int(8 * scale)
+        header_padding = int(8 * scale)
+        border_radius = int(8 * scale)
+        checkbox_size = int(16 * scale)
+        checkbox_margin = int(2 * scale)
+        
         # 체크박스 유무에 따른 첫 번째 헤더 스타일 조건부 적용
         if self.has_checkboxes:
             first_header_style = f"""
@@ -135,7 +150,7 @@ class ModernTableWidget(QTableWidget):
             first_header_style = f"""
             /* 첫 번째 컬럼 (일반 컬럼) - 체크박스가 없는 경우 */
             QHeaderView::section:first {{
-                font-size: 12px;
+                font-size: {tokens.get_font_size('normal')}px;
                 color: {ModernStyle.COLORS['text_primary']};
                 font-weight: 600;
                 text-align: center;
@@ -149,14 +164,14 @@ class ModernTableWidget(QTableWidget):
                 selection-background-color: {ModernStyle.COLORS['primary']};
                 selection-color: white;
                 color: {ModernStyle.COLORS['text_primary']};
-                font-size: 13px;
+                font-size: {tokens.get_font_size('normal')}px;
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
+                border-radius: {border_radius}px;
                 alternate-background-color: {ModernStyle.COLORS['bg_secondary']};
             }}
             
             QTableWidget::item {{
-                padding: 8px;
+                padding: {item_padding}px;
                 border-bottom: 1px solid {ModernStyle.COLORS['border']};
                 text-align: center;
             }}
@@ -173,12 +188,12 @@ class ModernTableWidget(QTableWidget):
             
             /* 체크박스 스타일 - 파워링크 이전기록과 동일 */
             QTableWidget::indicator {{
-                width: 16px;
-                height: 16px;
+                width: {checkbox_size}px;
+                height: {checkbox_size}px;
                 border: 2px solid #ccc;
                 border-radius: 3px;
                 background-color: white;
-                margin: 2px;
+                margin: {checkbox_margin}px;
             }}
             
             QTableWidget::indicator:checked {{
@@ -202,12 +217,12 @@ class ModernTableWidget(QTableWidget):
             QHeaderView::section {{
                 background-color: {ModernStyle.COLORS['bg_secondary']};
                 color: {ModernStyle.COLORS['text_primary']};
-                padding: 8px;
+                padding: {header_padding}px;
                 border: none;
                 border-right: 1px solid {ModernStyle.COLORS['border']};
                 border-bottom: 2px solid {ModernStyle.COLORS['border']};
                 font-weight: 600;
-                font-size: 12px;
+                font-size: {tokens.get_font_size('normal')}px;
             }}
             
             {first_header_style}
@@ -219,9 +234,23 @@ class ModernTableWidget(QTableWidget):
             }}
         """)
         
-        # 체크박스가 있는 경우 첫 번째 컬럼 너비 고정
+        # 체크박스가 있는 경우 첫 번째 컬럼 너비 고정 (스케일링 적용)
         if self.has_checkboxes:
-            self.horizontalHeader().resizeSection(0, 50)
+            checkbox_column_width = int(50 * scale)
+            self.horizontalHeader().resizeSection(0, checkbox_column_width)
+    
+    def setScaledColumnWidths(self, widths: List[int]):
+        """
+        모든 컬럼에 스케일링된 너비 설정
+        
+        Args:
+            widths: 컬럼별 기준 너비 리스트 (1920x1080 기준)
+        """
+        for column, width in enumerate(widths):
+            if column < self.columnCount():
+                self.setScaledColumnWidth(column, width)
+    
+    
     
     def setup_header_checkbox(self):
         """헤더 체크박스 설정 (실제 체크박스 위젯 - 개별 체크박스와 완전 동일)"""
@@ -863,16 +892,6 @@ class ModernTableWidget(QTableWidget):
         scaled_width = int(width * self._scale)
         self.setColumnWidth(column, scaled_width)
     
-    def setScaledColumnWidths(self, widths: List[int]):
-        """
-        모든 컬럼에 스케일링된 너비 설정
-        
-        Args:
-            widths: 컬럼별 기준 너비 리스트 (1920x1080 기준)
-        """
-        for column, width in enumerate(widths):
-            if column < self.columnCount():
-                self.setScaledColumnWidth(column, width)
 
 
 class ModernTableContainer(QWidget):
@@ -907,69 +926,19 @@ class ModernTableContainer(QWidget):
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
         
-        # 제목
+        # 제목 (반응형 스케일링 적용)
         if self.title:
+            scale = tokens.get_screen_scale_factor()
+            title_font_size = int(16 * scale)
+            title_padding = int(5 * scale)
+            
             title_label = QLabel(self.title)
             title_label.setStyleSheet(f"""
                 QLabel {{
-                    font-size: 16px;
+                    font-size: {title_font_size}px;
                     font-weight: 700;
                     color: {ModernStyle.COLORS['text_primary']};
-                    padding: 5px 0;
-                }}
-            """)
-            layout.addWidget(title_label)
-        
-        # 테이블
-        layout.addWidget(self.table)
-        
-        # 하단 버튼 영역 (서브클래스에서 오버라이드)
-        button_layout = self.create_button_layout()
-        if button_layout:
-            layout.addLayout(button_layout)
-
-
-class ModernTableContainer(QWidget):
-    """
-    ModernTableWidget를 포함하는 컨테이너
-    테이블 + 하단 버튼들을 포함하는 완전한 UI 블록
-    """
-    
-    def __init__(self, 
-                 title: str,
-                 columns: List[str],
-                 has_checkboxes: bool = True,
-                 has_header_checkbox: bool = True,
-                 parent=None):
-        """
-        ModernTableContainer 초기화
-        
-        Args:
-            title: 테이블 제목
-            columns: 컬럼 헤더 리스트
-            has_checkboxes: 체크박스 포함 여부
-            has_header_checkbox: 헤더 체크박스 포함 여부
-            parent: 부모 위젯
-        """
-        super().__init__(parent)
-        self.title = title
-        self.table = ModernTableWidget(columns, has_checkboxes, has_header_checkbox)
-        self.setup_ui()
-    
-    def setup_ui(self):
-        """UI 초기화"""
-        layout = QVBoxLayout(self)
-        layout.setSpacing(15)
-        
-        # 제목
-        if self.title:
-            title_label = QLabel(self.title)
-            title_label.setStyleSheet(f"""
-                QLabel {{
-                    font-size: 16px;
-                    font-weight: 700;
-                    color: {ModernStyle.COLORS['text_primary']};
-                    padding: 5px 0;
+                    padding: {title_padding}px 0;
                 }}
             """)
             layout.addWidget(title_label)

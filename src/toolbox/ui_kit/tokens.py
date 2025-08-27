@@ -17,14 +17,22 @@ FONT_FAMILY_MONO = "'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace"
 
 # 화면 크기 기반 반응형 스케일링
 _screen_scale_factor = 1.0
+_scale_factor_cached = True  # 캐싱 플래그
 
 def set_screen_scale_factor(factor: float):
     """화면 크기에 따른 스케일 팩터 설정"""
-    global _screen_scale_factor
-    _screen_scale_factor = max(0.7, min(1.3, factor))  # 0.7 ~ 1.3 범위로 제한
+    global _screen_scale_factor, _scale_factor_cached
+    new_factor = max(0.7, min(1.3, factor))  # 0.7 ~ 1.3 범위로 제한
+    
+    # 값이 변경된 경우에만 업데이트
+    if _screen_scale_factor != new_factor:
+        _screen_scale_factor = new_factor
+        _scale_factor_cached = False  # 캐시 무효화
 
 def get_screen_scale_factor() -> float:
-    """현재 스케일 팩터 반환"""
+    """현재 스케일 팩터 반환 (캐시 최적화)"""
+    global _scale_factor_cached
+    _scale_factor_cached = True
     return _screen_scale_factor
 
 def calculate_screen_scale_from_resolution(width: int, height: int) -> float:
@@ -47,11 +55,15 @@ def calculate_screen_scale_from_resolution(width: int, height: int) -> float:
 # 선택: 접근성용 가변 배율 (원하면 1.0 고정)
 USER_TEXT_SCALE = 1.0
 def fpx(v: int) -> int:
-    """접근성 옵션 적용된 폰트 px 반환 (반응형 적용)"""
+    """접근성 옵션 적용된 폰트 px 반환 (반응형 적용, 최적화)"""
+    if USER_TEXT_SCALE == 1.0 and _screen_scale_factor == 1.0:
+        return v  # 스케일링이 필요없는 경우 계산 생략
     return int(round(v * USER_TEXT_SCALE * _screen_scale_factor))
 
 def spx(v: int) -> int:
-    """공간/크기용 반응형 px 반환"""
+    """공간/크기용 반응형 px 반환 (최적화)"""
+    if _screen_scale_factor == 1.0:
+        return v  # 스케일링이 필요없는 경우 계산 생략
     return int(round(v * _screen_scale_factor))
 
 # ---- Spacing / Sizing (px) --------------------------------------------------
@@ -153,29 +165,33 @@ DUR_SLOW = 260
 EASE_OUT = "cubic-bezier(0.16, 1, 0.3, 1)"
 
 # ---- 편의 함수들 -------------------------------------------------------------
+# 폰트 크기 상수 캐시 (성능 최적화)
+_FONT_SIZES = {
+    'title': FONT_TITLE,
+    'header': FONT_HEADER,
+    'large': FONT_LARGE,
+    'normal': FONT_NORMAL,
+    'small': FONT_SMALL,
+    'tiny': FONT_TINY
+}
+
 def get_font_size(size_name: str = 'normal') -> int:
-    """폰트 크기 반환 (접근성 배율 적용)"""
-    sizes = {
-        'title': FONT_TITLE,
-        'header': FONT_HEADER,
-        'large': FONT_LARGE,
-        'normal': FONT_NORMAL,
-        'small': FONT_SMALL,
-        'tiny': FONT_TINY
-    }
-    return fpx(sizes.get(size_name, FONT_NORMAL))
+    """폰트 크기 반환 (접근성 배율 적용, 최적화)"""
+    return fpx(_FONT_SIZES.get(size_name, FONT_NORMAL))
+
+# 간격 상수 캐시 (성능 최적화)
+_SPACINGS = {
+    'xs': GAP_2,
+    'sm': GAP_4,
+    'md': GAP_6,
+    'lg': GAP_10,
+    'xl': GAP_16,
+    'xxl': GAP_20
+}
 
 def get_spacing(size_name: str = 'md') -> int:
-    """간격 반환"""
-    spacings = {
-        'xs': GAP_2,
-        'sm': GAP_4,
-        'md': GAP_6,
-        'lg': GAP_10,
-        'xl': GAP_16,
-        'xxl': GAP_20
-    }
-    return spacings.get(size_name, GAP_6)
+    """간격 반환 (최적화)"""
+    return _SPACINGS.get(size_name, GAP_6)
 
 def get_radius(size_name: str = 'md') -> int:
     """반지름 반환"""

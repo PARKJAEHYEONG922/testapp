@@ -26,19 +26,42 @@ class ModernPrimaryButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """공용 스타일 사용 - 반응형 크기 적용"""
+        """반응형 스타일 적용 - 모든 크기 속성 스케일링"""
         scale = tokens.get_screen_scale_factor()
-        style = ModernStyle.get_button_style('primary')
         
-        # 모든 화면에서 동일한 비율로 폰트 크기 조정
+        # 반응형 크기 계산
+        padding_v = int(tokens.GAP_6 * scale)
+        padding_h = int(tokens.GAP_12 * scale)
         font_size = int(tokens.get_font_size('normal') * scale)
-        style += f"""
-        QPushButton {{
-            font-size: {font_size}px;
-        }}
-        """
+        border_radius = int(tokens.RADIUS_SM * scale)
+        min_width = int(70 * scale)
+        min_height = int(tokens.BTN_H_SM * scale)
         
-        self.setStyleSheet(style)
+        self.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {tokens.COLOR_PRIMARY};
+                color: white;
+                border: none;
+                border-radius: {border_radius}px;
+                padding: {padding_v}px {padding_h}px;
+                font-weight: 580;
+                font-size: {font_size}px;
+                font-family: '{ModernStyle.DEFAULT_FONT}';
+                min-width: {min_width}px;
+                min-height: {min_height}px;
+            }}
+            QPushButton:hover {{
+                background-color: {tokens.COLOR_PRIMARY_HOVER};
+            }}
+            QPushButton:pressed {{
+                background-color: {tokens.COLOR_PRIMARY_PRESSED};
+                margin-top: 1px;
+            }}
+            QPushButton:disabled {{
+                background-color: {tokens.COLOR_BG_INPUT};
+                color: {tokens.COLOR_TEXT_SECONDARY};
+            }}
+        """)
 
 
 class ModernSuccessButton(QPushButton):
@@ -49,19 +72,42 @@ class ModernSuccessButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """공용 스타일 사용 - 반응형 크기 적용"""
+        """반응형 스타일 적용 - 모든 크기 속성 스케일링"""
         scale = tokens.get_screen_scale_factor()
-        style = ModernStyle.get_button_style('secondary')
         
-        # 모든 화면에서 동일한 비율로 폰트 크기 조정
+        # 반응형 크기 계산
+        padding_v = int(tokens.GAP_6 * scale)
+        padding_h = int(tokens.GAP_12 * scale)
         font_size = int(tokens.get_font_size('normal') * scale)
-        style += f"""
-        QPushButton {{
-            font-size: {font_size}px;
-        }}
-        """
+        border_radius = int(tokens.RADIUS_SM * scale)
+        min_width = int(70 * scale)
+        min_height = int(tokens.BTN_H_SM * scale)
         
-        self.setStyleSheet(style)
+        self.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {tokens.COLOR_SUCCESS};
+                color: white;
+                border: none;
+                border-radius: {border_radius}px;
+                padding: {padding_v}px {padding_h}px;
+                font-weight: 580;
+                font-size: {font_size}px;
+                font-family: '{ModernStyle.DEFAULT_FONT}';
+                min-width: {min_width}px;
+                min-height: {min_height}px;
+            }}
+            QPushButton:hover {{
+                background-color: {tokens.COLOR_SUCCESS_HOVER};
+            }}
+            QPushButton:pressed {{
+                background-color: {tokens.COLOR_SUCCESS_PRESSED};
+                margin-top: 1px;
+            }}
+            QPushButton:disabled {{
+                background-color: {tokens.COLOR_BG_INPUT};
+                color: {tokens.COLOR_TEXT_SECONDARY};
+            }}
+        """)
 
 
 class ModernDangerButton(QPushButton):
@@ -72,19 +118,42 @@ class ModernDangerButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """공용 스타일 사용 - 반응형 크기 적용"""
+        """반응형 스타일 적용 - 모든 크기 속성 스케일링"""
         scale = tokens.get_screen_scale_factor()
-        style = ModernStyle.get_button_style('danger')
         
-        # 모든 화면에서 동일한 비율로 폰트 크기 조정
+        # 반응형 크기 계산
+        padding_v = int(tokens.GAP_6 * scale)
+        padding_h = int(tokens.GAP_12 * scale)
         font_size = int(tokens.get_font_size('normal') * scale)
-        style += f"""
-        QPushButton {{
-            font-size: {font_size}px;
-        }}
-        """
+        border_radius = int(tokens.RADIUS_SM * scale)
+        min_width = int(70 * scale)
+        min_height = int(tokens.BTN_H_SM * scale)
         
-        self.setStyleSheet(style)
+        self.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {tokens.COLOR_DANGER};
+                color: white;
+                border: none;
+                border-radius: {border_radius}px;
+                padding: {padding_v}px {padding_h}px;
+                font-weight: 580;
+                font-size: {font_size}px;
+                font-family: '{ModernStyle.DEFAULT_FONT}';
+                min-width: {min_width}px;
+                min-height: {min_height}px;
+            }}
+            QPushButton:hover {{
+                background-color: {tokens.COLOR_DANGER_HOVER};
+            }}
+            QPushButton:pressed {{
+                background-color: {tokens.COLOR_DANGER_PRESSED};
+                margin-top: 1px;
+            }}
+            QPushButton:disabled {{
+                background-color: {tokens.COLOR_BG_INPUT};
+                color: {tokens.COLOR_TEXT_SECONDARY};
+            }}
+        """)
 
 
 class ModernCancelButton(QPushButton):
@@ -145,19 +214,46 @@ class ModernHelpButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """공용 스타일 사용 - 반응형 크기 적용"""
+        """반응형 스타일 적용 - 모든 크기 속성 스케일링"""
         scale = tokens.get_screen_scale_factor()
-        style = ModernStyle.get_button_style('outline')
         
-        # 모든 화면에서 동일한 비율로 폰트 크기 조정
+        # 반응형 크기 계산
+        padding_v = int(tokens.GAP_6 * scale)
+        padding_h = int(tokens.GAP_12 * scale)
         font_size = int(tokens.get_font_size('normal') * scale)
-        style += f"""
-        QPushButton {{
-            font-size: {font_size}px;
-        }}
-        """
+        border_radius = int(tokens.RADIUS_SM * scale)
+        min_width = int(70 * scale)
+        min_height = int(tokens.BTN_H_SM * scale)
+        border_width = int(tokens.BORDER_1 * scale)
         
-        self.setStyleSheet(style)
+        self.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {tokens.COLOR_BG_INPUT};
+                color: {tokens.COLOR_TEXT_PRIMARY};
+                border: {border_width}px solid {tokens.COLOR_BORDER};
+                border-radius: {border_radius}px;
+                padding: {padding_v}px {padding_h}px;
+                font-weight: 580;
+                font-size: {font_size}px;
+                font-family: '{ModernStyle.DEFAULT_FONT}';
+                min-width: {min_width}px;
+                min-height: {min_height}px;
+            }}
+            QPushButton:hover {{
+                background-color: {tokens.COLOR_BG_SECONDARY};
+                border-color: {tokens.COLOR_PRIMARY};
+            }}
+            QPushButton:pressed {{
+                background-color: {tokens.COLOR_PRIMARY};
+                color: white;
+                border-color: {tokens.COLOR_PRIMARY};
+                margin-top: 1px;
+            }}
+            QPushButton:disabled {{
+                background-color: {tokens.COLOR_BG_INPUT};
+                color: {tokens.COLOR_TEXT_SECONDARY};
+            }}
+        """)
 
 
 class ModernButton(QPushButton):
@@ -169,19 +265,73 @@ class ModernButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """공용 스타일 사용 - ModernStyle.get_button_style() 활용"""
-        # style_type을 ModernStyle의 지원 타입으로 매핑
-        style_mapping = {
-            "primary": "primary",
-            "success": "secondary",  # success는 secondary로 매핑
-            "warning": "danger",     # warning은 danger로 매핑 (임시)
-            "danger": "danger",
-            "info": "primary",       # info는 primary로 매핑
-            "secondary": "outline"   # secondary는 outline으로 매핑
-        }
+        """반응형 스타일 적용 - 타입별 완전 스케일링"""
+        scale = tokens.get_screen_scale_factor()
         
-        mapped_style = style_mapping.get(self.style_type, "primary")
-        self.setStyleSheet(ModernStyle.get_button_style(mapped_style))
+        # 반응형 크기 계산
+        padding_v = int(tokens.GAP_6 * scale)
+        padding_h = int(tokens.GAP_12 * scale)
+        font_size = int(tokens.get_font_size('normal') * scale)
+        border_radius = int(tokens.RADIUS_SM * scale)
+        min_width = int(70 * scale)
+        min_height = int(tokens.BTN_H_SM * scale)
+        border_width = int(tokens.BORDER_1 * scale)
+        
+        # 타입별 색상 매핑
+        if self.style_type in ["primary", "info"]:
+            bg_color = tokens.COLOR_PRIMARY
+            hover_color = tokens.COLOR_PRIMARY_HOVER
+            pressed_color = tokens.COLOR_PRIMARY_PRESSED
+            text_color = "white"
+            border_color = "none"
+        elif self.style_type == "success":
+            bg_color = tokens.COLOR_SUCCESS
+            hover_color = tokens.COLOR_SUCCESS_HOVER
+            pressed_color = tokens.COLOR_SUCCESS_PRESSED
+            text_color = "white"
+            border_color = "none"
+        elif self.style_type in ["danger", "warning"]:
+            bg_color = tokens.COLOR_DANGER
+            hover_color = tokens.COLOR_DANGER_HOVER
+            pressed_color = tokens.COLOR_DANGER_PRESSED
+            text_color = "white"
+            border_color = "none"
+        else:  # secondary, outline
+            bg_color = tokens.COLOR_BG_INPUT
+            hover_color = tokens.COLOR_BG_SECONDARY
+            pressed_color = tokens.COLOR_PRIMARY
+            text_color = tokens.COLOR_TEXT_PRIMARY
+            border_color = f"{border_width}px solid {tokens.COLOR_BORDER}"
+        
+        border_style = "border: none;" if border_color == "none" else f"border: {border_color};"
+        
+        self.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {bg_color};
+                color: {text_color};
+                {border_style}
+                border-radius: {border_radius}px;
+                padding: {padding_v}px {padding_h}px;
+                font-weight: 580;
+                font-size: {font_size}px;
+                font-family: '{ModernStyle.DEFAULT_FONT}';
+                min-width: {min_width}px;
+                min-height: {min_height}px;
+            }}
+            QPushButton:hover {{
+                background-color: {hover_color};
+                {'border-color: ' + tokens.COLOR_PRIMARY + ';' if border_color != 'none' else ''}
+            }}
+            QPushButton:pressed {{
+                background-color: {pressed_color};
+                {'color: white; border-color: ' + tokens.COLOR_PRIMARY + ';' if border_color != 'none' else ''}
+                margin-top: 1px;
+            }}
+            QPushButton:disabled {{
+                background-color: {tokens.COLOR_BG_INPUT};
+                color: {tokens.COLOR_TEXT_SECONDARY};
+            }}
+        """)
     
     # _darken_color 메서드 제거됨 - 공용 스타일 사용으로 불필요
 
@@ -195,8 +345,30 @@ class ModernLineEdit(QLineEdit):
         self._setup_style()
     
     def _setup_style(self):
-        """공용 스타일 사용 - ModernStyle.get_input_style() 활용"""
-        self.setStyleSheet(ModernStyle.get_input_style())
+        """반응형 스타일 적용 - 모든 크기 속성 스케일링"""
+        scale = tokens.get_screen_scale_factor()
+        
+        border_width = int(tokens.BORDER_2 * scale)
+        border_radius = int(tokens.RADIUS_SM * scale)
+        padding_v = int(tokens.GAP_8 * scale)
+        padding_h = int(tokens.GAP_12 * scale)
+        font_size = int(tokens.get_font_size('small') * scale)
+        
+        self.setStyleSheet(f"""
+            QLineEdit {{
+                background-color: {tokens.COLOR_BG_PRIMARY};
+                border: {border_width}px solid {tokens.COLOR_BORDER};
+                border-radius: {border_radius}px;
+                padding: {padding_v}px {padding_h}px;
+                font-size: {font_size}px;
+                font-family: '{ModernStyle.DEFAULT_FONT}';
+                color: {tokens.COLOR_TEXT_PRIMARY};
+            }}
+            QLineEdit:focus {{
+                border-color: {tokens.COLOR_PRIMARY};
+                outline: none;
+            }}
+        """)
 
 
 class ModernTextEdit(QTextEdit):
@@ -208,13 +380,20 @@ class ModernTextEdit(QTextEdit):
         self._setup_style()
     
     def _setup_style(self):
-        """토큰 기반 스타일 설정"""
+        """반응형 스타일 적용 - 모든 크기 속성 스케일링"""
+        scale = tokens.get_screen_scale_factor()
+        
+        border_width = int(tokens.BORDER_2 * scale)
+        border_radius = int(tokens.RADIUS_MD * scale)
+        padding = int(tokens.GAP_8 * scale)
+        font_size = int(tokens.get_font_size('normal') * scale)
+        
         self.setStyleSheet(f"""
             QTextEdit {{
-                border: {tokens.BORDER_2}px solid {tokens.COLOR_BORDER};
-                border-radius: {tokens.RADIUS_MD}px;
-                padding: {tokens.GAP_8}px;
-                font-size: {tokens.get_font_size('normal')}px;
+                border: {border_width}px solid {tokens.COLOR_BORDER};
+                border-radius: {border_radius}px;
+                padding: {padding}px;
+                font-size: {font_size}px;
                 background-color: {tokens.COLOR_BG_PRIMARY};
             }}
             QTextEdit:focus {{
@@ -232,21 +411,31 @@ class ModernCard(QGroupBox):
         self._setup_style()
     
     def _setup_style(self):
-        """토큰 기반 스타일 설정 - 디스코드 방식"""
+        """반응형 스타일 적용 - 모든 크기 속성 스케일링"""
+        scale = tokens.get_screen_scale_factor()
+        
+        font_size = int(tokens.get_font_size('small') * scale)
+        border_width = int(tokens.BORDER_2 * scale)
+        border_radius = int(tokens.RADIUS_LG * scale)
+        margin_v = int(tokens.GAP_10 * scale)
+        padding_top = int(tokens.GAP_16 * scale)
+        left_pos = int(tokens.GAP_16 * scale)
+        title_padding = int(tokens.GAP_10 * scale)
+        
         self.setStyleSheet(f"""
             QGroupBox {{
-                font-size: {tokens.get_font_size('small')}px;
+                font-size: {font_size}px;
                 font-weight: 600;
-                border: {tokens.BORDER_2}px solid {tokens.COLOR_BORDER};
-                border-radius: {tokens.RADIUS_LG}px;
-                margin: {tokens.GAP_10}px 0;
-                padding-top: {tokens.GAP_16}px;
+                border: {border_width}px solid {tokens.COLOR_BORDER};
+                border-radius: {border_radius}px;
+                margin: {margin_v}px 0;
+                padding-top: {padding_top}px;
                 background-color: {tokens.COLOR_BG_CARD};
             }}
             QGroupBox::title {{
                 subcontrol-origin: margin;
-                left: {tokens.GAP_16}px;
-                padding: 0 {tokens.GAP_10}px;
+                left: {left_pos}px;
+                padding: 0 {title_padding}px;
                 color: {tokens.COLOR_TEXT_PRIMARY};
                 background-color: {tokens.COLOR_BG_CARD};
             }}
@@ -261,23 +450,32 @@ class ModernProgressBar(QProgressBar):
         self._setup_style()
     
     def _setup_style(self):
-        """토큰 기반 스타일 설정"""
+        """반응형 스타일 적용 - 모든 크기 속성 스케일링"""
+        scale = tokens.get_screen_scale_factor()
+        
+        border_width = int(tokens.BORDER_2 * scale)
+        border_radius = int(tokens.RADIUS_MD * scale)
+        font_size = int(tokens.get_font_size('normal') * scale)
+        height = int((tokens.BTN_H_SM - tokens.GAP_6) * scale)
+        chunk_radius = int(tokens.RADIUS_SM * scale)
+        min_height = int(tokens.BTN_H_SM * scale)
+        
         self.setStyleSheet(f"""
             QProgressBar {{
-                border: {tokens.BORDER_2}px solid {tokens.COLOR_BORDER};
-                border-radius: {tokens.RADIUS_MD}px;
+                border: {border_width}px solid {tokens.COLOR_BORDER};
+                border-radius: {border_radius}px;
                 text-align: center;
-                font-size: {tokens.get_font_size('normal')}px;
+                font-size: {font_size}px;
                 background-color: {tokens.COLOR_BG_INPUT};
-                height: {tokens.BTN_H_SM - tokens.GAP_6}px;
+                height: {height}px;
             }}
             QProgressBar::chunk {{
                 background-color: {tokens.COLOR_PRIMARY};
-                border-radius: {tokens.RADIUS_SM}px;
+                border-radius: {chunk_radius}px;
             }}
         """)
         
-        self.setMinimumHeight(tokens.BTN_H_SM)
+        self.setMinimumHeight(min_height)
 
 
 class StatusWidget(QWidget):
@@ -293,8 +491,9 @@ class StatusWidget(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         
         self.status_label = QLabel("준비됨")
+        scale = tokens.get_screen_scale_factor()
         font = QFont()
-        font.setPixelSize(tokens.get_font_size('normal'))
+        font.setPixelSize(int(tokens.get_font_size('normal') * scale))
         self.status_label.setFont(font)
         
         layout.addWidget(self.status_label)
@@ -330,8 +529,9 @@ class FormGroup(QWidget):
         
         # 라벨
         label = QLabel(label_text)
+        scale = tokens.get_screen_scale_factor()
         font = QFont()
-        font.setPixelSize(tokens.get_font_size('normal'))
+        font.setPixelSize(int(tokens.get_font_size('normal') * scale))
         label.setFont(font)
         label.setStyleSheet(f"color: {tokens.COLOR_TEXT_PRIMARY}; font-weight: bold;")
         

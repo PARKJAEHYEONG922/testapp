@@ -245,6 +245,83 @@ class APIChecker:
         api_config = config_manager.load_api_config()
         # 네이버 API 둘 다 설정되어 있어야 완전한 기능 사용 가능
         return api_config.is_shopping_valid() and api_config.is_searchad_valid()
+    
+    @staticmethod
+    def show_api_setup_dialog(parent_widget, feature_name: str = "기능") -> bool:
+        """
+        API 설정 안내 다이얼로그 표시 - 공용 메서드
+        
+        Args:
+            parent_widget: 부모 위젯
+            feature_name: 기능명 (예: "순위 확인", "키워드 추가", "새 프로젝트 생성")
+            
+        Returns:
+            bool: API 설정이 완료되었거나 사용자가 계속 진행을 선택했으면 True
+        """
+        try:
+            logger.info(f"API 설정 확인 시작 - {feature_name}")
+            
+            # API 준비 상태 확인
+            if APIChecker.is_ready_for_full_functionality():
+                logger.info("API 설정이 완료되어 있음")
+                return True
+                
+            # 설정되지 않은 API 목록 가져오기
+            missing_apis = APIChecker.get_missing_required_apis()
+            logger.info(f"누락된 API: {missing_apis}")
+            
+            if not missing_apis:
+                logger.info("누락된 API 없음")
+                return True
+                
+            from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+            
+            apis_text = ", ".join(missing_apis)
+            logger.info(f"API 설정 다이얼로그 표시 중: {apis_text}")
+            
+            result = ModernConfirmDialog.question(
+                parent_widget,
+                "API 설정 필요", 
+                f"🔑 {apis_text}가 설정되지 않았습니다.\n\n"
+                f"{feature_name} 기능을 사용하기 위해서는\n"
+                "네이버 API 설정이 필요합니다.\n\n"
+                "지금 API 설정 창으로 이동하시겠습니까?",
+                confirm_text="API 설정하기",
+                cancel_text="나중에"
+            )
+            
+            logger.info(f"사용자 선택 결과: {result}")
+            
+            if result == ModernConfirmDialog.Accepted:
+                # API 설정 다이얼로그 열기
+                APIChecker._open_api_settings_dialog(parent_widget)
+            
+            return False
+            
+        except Exception as e:
+            logger.error(f"API 설정 다이얼로그 표시 중 오류: {e}")
+            import traceback
+            logger.error(f"전체 traceback: {traceback.format_exc()}")
+            return False  # 오류 발생시 진행하지 않도록
+    
+    @staticmethod
+    def _open_api_settings_dialog(parent_widget):
+        """API 설정 다이얼로그 열기 - 내부 메서드"""
+        try:
+            from src.desktop.api_dialog import APISettingsDialog
+            
+            # 메인 윈도우 찾기
+            main_window = parent_widget.window() if parent_widget else None
+            dialog = APISettingsDialog(main_window)
+            
+            if dialog.exec() == dialog.Accepted:
+                log_manager.add_log("✅ API 설정이 완료되었습니다.", "success")
+                # 캐시 무효화 (새로운 설정 반영)
+                APIChecker.invalidate_all_caches()
+            
+        except Exception as e:
+            logger.error(f"API 설정 다이얼로그 열기 실패: {e}")
+            log_manager.add_log(f"❌ API 설정 창을 열 수 없습니다: {str(e)}", "error")
 
 
 def check_api_status_on_startup():

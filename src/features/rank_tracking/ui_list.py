@@ -155,9 +155,37 @@ class ProjectListWidget(QWidget):
             }}
         """)
     
+    def _check_api_settings(self) -> bool:
+        """API 설정 확인 - APIChecker 공용 함수 사용"""
+        try:
+            from src.foundation.logging import get_logger
+            logger = get_logger("features.rank_tracking.ui_list")
+            logger.info("프로젝트 추가 - API 설정 확인 시작")
+            
+            from src.desktop.api_checker import APIChecker
+            result = APIChecker.show_api_setup_dialog(self, "새 프로젝트 생성")
+            logger.info(f"API 설정 확인 결과: {result}")
+            return result
+            
+        except Exception as e:
+            from src.foundation.logging import get_logger
+            logger = get_logger("features.rank_tracking.ui_list")
+            logger.error(f"API 설정 확인 중 오류: {e}")
+            import traceback
+            logger.error(f"전체 traceback: {traceback.format_exc()}")
+            return False  # 오류 발생시 진행하지 않도록
+    
     
     def add_project(self):
         """새 프로젝트 추가 - 기존 다이얼로그와 동일"""
+        from src.desktop.common_log import log_manager
+        log_manager.add_log("🔘 새 프로젝트 추가 버튼 클릭됨", "info")
+        
+        # API 키 확인
+        if not self._check_api_settings():
+            log_manager.add_log("❌ API 설정 미완료로 프로젝트 추가 중단", "warning")
+            return
+            
         # 새 프로젝트 다이얼로그 표시
         # Local import to avoid circular dependency
         from .ui_main import NewProjectDialog

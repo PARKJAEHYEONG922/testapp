@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 from src.toolbox.ui_kit import ModernStyle
-from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernCancelButton
+from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernCancelButton, ModernSuccessButton
 
 # engine_local에서 기본 프롬프트 가져오기
 from .engine_local import DEFAULT_AI_PROMPT
@@ -101,8 +101,7 @@ class PromptSelectionDialog(QDialog):
         header_layout.addStretch()
         
         # 복사 버튼
-        copy_button = QPushButton("📋 복사")
-        copy_button.setObjectName("copy_button")
+        copy_button = ModernPrimaryButton("📋 복사")
         copy_button.clicked.connect(lambda: self.copy_prompt_to_clipboard(content))
         header_layout.addWidget(copy_button)
         
@@ -149,8 +148,7 @@ class PromptSelectionDialog(QDialog):
         save_layout = QHBoxLayout()
         save_layout.addStretch()
         
-        self.save_button = QPushButton("💾 저장")
-        self.save_button.setObjectName("save_button")
+        self.save_button = ModernSuccessButton("💾 저장")
         self.save_button.clicked.connect(self.save_custom_prompt)
         save_layout.addWidget(self.save_button)
         
@@ -167,15 +165,11 @@ class PromptSelectionDialog(QDialog):
         
         # 취소 버튼
         cancel_button = ModernCancelButton("취소")
-        cancel_button.setMinimumWidth(80)
-        cancel_button.setMinimumHeight(40)
         cancel_button.clicked.connect(self.reject)
         button_layout.addWidget(cancel_button)
         
         # 확인 버튼
         confirm_button = ModernPrimaryButton("확인")
-        confirm_button.setMinimumWidth(80)
-        confirm_button.setMinimumHeight(40)
         confirm_button.clicked.connect(self.validate_and_accept)
         button_layout.addWidget(confirm_button)
         
@@ -475,8 +469,6 @@ class AIAnalysisDialog(QDialog):
         button_layout.addStretch()
         
         close_button = ModernPrimaryButton("닫기")
-        close_button.setMinimumWidth(80)
-        close_button.setMinimumHeight(40)
         close_button.clicked.connect(self.accept)
         button_layout.addWidget(close_button)
         

@@ -222,16 +222,18 @@ class KeywordAnalysisWidget(QWidget):
         
         progress_layout.addStretch()  # 공간 확보
         
-        # 진행률 바 - 토큰 기반
+        # 진행률 바 - 반응형 토큰 기반
+        scale = tokens.get_screen_scale_factor()
         self.progress_bar = QProgressBar()
-        progress_height = 24
-        progress_border_radius = tokens.RADIUS_SM
-        progress_font_size = tokens.get_font_size('small')
-        progress_max_width = 200
+        progress_height = int(24 * scale)
+        progress_border_radius = int(tokens.RADIUS_SM * scale)
+        progress_font_size = int(tokens.get_font_size('small') * scale)
+        progress_max_width = int(200 * scale)
+        border_width = int(2 * scale)
         
         self.progress_bar.setStyleSheet(f"""
             QProgressBar {{
-                border: 2px solid {ModernStyle.COLORS['border']};
+                border: {border_width}px solid {ModernStyle.COLORS['border']};
                 border-radius: {progress_border_radius}px;
                 text-align: center;
                 font-weight: 500;
@@ -240,7 +242,7 @@ class KeywordAnalysisWidget(QWidget):
             }}
             QProgressBar::chunk {{
                 background-color: {ModernStyle.COLORS['primary']};
-                border-radius: {progress_border_radius - 2}px;
+                border-radius: {max(1, progress_border_radius - border_width)}px;
             }}
         """)
         self.progress_bar.setMaximumWidth(progress_max_width)
@@ -563,12 +565,13 @@ class KeywordAnalysisWidget(QWidget):
                 QMessageBox.information(self, "키워드 입력 필요", "검색할 키워드를 입력해주세요.")
             return
         
-        if not self.service:
-            self.add_log("❌ API 설정이 필요합니다.", "error")
-            try:
-                ModernInfoDialog.warning(self, "API 설정 필요", "API 설정을 먼저 완료해주세요.")
-            except:
-                QMessageBox.information(self, "API 설정 필요", "API 설정을 먼저 완료해주세요.")
+        # API 설정 확인 - 공용 다이얼로그 사용
+        try:
+            from src.desktop.api_checker import APIChecker
+            if not APIChecker.show_api_setup_dialog(self, "키워드 검색"):
+                return
+        except Exception as e:
+            self.add_log(f"❌ API 설정 확인 실패: {e}", "error")
             return
         
         # 키워드 파싱 (validators 사용)

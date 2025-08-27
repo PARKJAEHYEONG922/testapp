@@ -227,10 +227,11 @@ def format_datetime(value: Optional[Union[datetime, str]],
         kst = timezone(timedelta(hours=9))
         value = value.astimezone(kst)
     else:
-        # timezone 정보가 없는 경우 UTC로 가정하고 KST로 변환
-        utc_time = value.replace(tzinfo=timezone.utc)
-        kst = timezone(timedelta(hours=9))
-        value = utc_time.astimezone(kst)
+        # timezone 정보가 없는 경우:
+        # SQLite에서 나온 시간은 이미 로컬시간(KST)이므로 변환하지 않음
+        # ISO 문자열에 'Z'가 있었던 경우에만 UTC->KST 변환을 했으므로
+        # 일반적인 로컬 datetime은 그대로 사용
+        pass
     
     # datetime 객체 포맷팅 (timezone 정보 제거하고 포맷)
     return format_date(value.replace(tzinfo=None), format_str, default)

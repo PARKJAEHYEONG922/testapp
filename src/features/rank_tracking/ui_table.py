@@ -597,10 +597,12 @@ class RankingTableWidget(QWidget):
             # 테이블 초기화 및 기본 컬럼 설정 (헤더 체크박스 설정하지 않음)
             self._reset_table_columns()
             
-            # 동적 날짜 컬럼 추가
+            # 동적 날짜 컬럼 추가 (반응형 스케일링 적용)
+            scale = tokens.get_screen_scale_factor()
+            scaled_date_column_width = int(100 * scale)
             for date in all_dates:
                 date_title = format_date(date)
-                self.ranking_table.add_dynamic_column(date_title, column_width=100)
+                self.ranking_table.add_dynamic_column(date_title, column_width=scaled_date_column_width)
             
             # 키워드 행 추가
             if keywords_data:
@@ -637,11 +639,8 @@ class RankingTableWidget(QWidget):
         self.ranking_table.setHorizontalHeaderLabels(base_columns)
         # setup_header_checkbox() 호출하지 않음 - 나중에 호출
         
-        # 컬럼 너비 설정 (고정값)
-        self.ranking_table.setColumnWidth(0, 50)   # 체크박스
-        self.ranking_table.setColumnWidth(1, 200)  # 키워드
-        self.ranking_table.setColumnWidth(2, 180)  # 카테고리
-        self.ranking_table.setColumnWidth(3, 100)  # 월검색량
+        # 컬럼 너비 설정 (반응형 스케일링 적용)
+        self.ranking_table.setScaledColumnWidths([50, 200, 180, 100])
     
     def _populate_keyword_rows(self, keywords_data: dict, all_dates: list, project_id: int, project_category_base: str):
         """키워드 행 채우기 (service 활용)"""
@@ -1024,10 +1023,17 @@ class RankingTableWidget(QWidget):
     def check_rankings(self):
         """순위 확인 - service 계층 호출"""
         try:
+            from src.desktop.common_log import log_manager
+            log_manager.add_log("🔘 순위 확인 버튼 클릭됨", "info")
             logger.info("순위 확인 버튼 클릭됨")
             
             if not self.current_project:
                 logger.warning("현재 프로젝트가 선택되지 않음")
+                return
+            
+            # API 키 확인
+            if not self._check_api_settings():
+                log_manager.add_log("❌ API 설정 미완료로 순위 확인 중단", "warning")
                 return
             
             project_id = self.current_project_id
@@ -1103,6 +1109,22 @@ class RankingTableWidget(QWidget):
         self.refresh_button_state(project_id)
         self.hide_progress()
     
+    def _check_api_settings(self) -> bool:
+        """API 설정 확인 - APIChecker 공용 함수 사용"""
+        try:
+            logger.info("순위 확인/키워드 추가 - API 설정 확인 시작")
+            
+            from src.desktop.api_checker import APIChecker
+            result = APIChecker.show_api_setup_dialog(self, "순위 확인 및 키워드 추가")
+            logger.info(f"API 설정 확인 결과: {result}")
+            return result
+            
+        except Exception as e:
+            logger.error(f"API 설정 확인 중 오류: {e}")
+            import traceback
+            logger.error(f"전체 traceback: {traceback.format_exc()}")
+            return False  # 오류 발생시 진행하지 않도록
+    
     def add_keyword(self):
         """키워드 추가 다이얼로그"""
         if not self.current_project_id:
@@ -1113,6 +1135,10 @@ class RankingTableWidget(QWidget):
                 "📋 기존 프로젝트에 추가하려면: 왼쪽 목록에서 프로젝트를 클릭하세요\n\n" +
                 "➕ 새 프로젝트를 만들려면: \"새 프로젝트\" 버튼을 클릭하세요"
             )
+            return
+        
+        # API 키 확인
+        if not self._check_api_settings():
             return
         
         # 키워드 추가 다이얼로그 사용

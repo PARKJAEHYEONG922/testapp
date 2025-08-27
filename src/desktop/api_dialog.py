@@ -5,9 +5,10 @@ API 설정 다이얼로그
 import json
 from pathlib import Path
 from PySide6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton,
+    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, 
     QTabWidget, QWidget, QGroupBox, QFormLayout, QMessageBox, QTextEdit
 )
+from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernDangerButton, ModernSuccessButton
 from PySide6.QtCore import Qt, Signal
 from src.toolbox.ui_kit import ModernStyle
 from src.toolbox.ui_kit import tokens
@@ -25,24 +26,38 @@ class APISettingsDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle("🔐 API 설정")
         self.setModal(True)
-        self.resize(600, 500)
+        
+        # 반응형 다이얼로그 크기 설정
+        scale = tokens.get_screen_scale_factor()
+        dialog_width = int(600 * scale)
+        dialog_height = int(500 * scale)
+        self.resize(dialog_width, dialog_height)
+        
         self.setup_ui()
         self.load_settings()
     
     def setup_ui(self):
         """UI 설정"""
-        layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(20)
+        scale = tokens.get_screen_scale_factor()
+        margin = int(20 * scale)
+        spacing = int(20 * scale)
         
-        # 제목
+        layout = QVBoxLayout()
+        layout.setContentsMargins(margin, margin, margin, margin)
+        layout.setSpacing(spacing)
+        
+        # 제목 (반응형 스케일링)
+        scale = tokens.get_screen_scale_factor()
+        title_font_size = int(18 * scale)
+        title_margin = int(10 * scale)
+        
         title_label = QLabel("네이버 API 설정")
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 18px;
+                font-size: {title_font_size}px;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
-                margin-bottom: 10px;
+                margin-bottom: {title_margin}px;
             }}
         """)
         layout.addWidget(title_label)
@@ -114,49 +129,12 @@ class APISettingsDialog(QDialog):
         
         # 개발자 API 버튼
         dev_btn_layout = QHBoxLayout()
-        # 삭제 버튼 먼저
-        self.shopping_delete_btn = QPushButton("삭제")
-        self.shopping_delete_btn.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['danger']};
-                color: white;
-                border: none;
-                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
-                border-radius: {tokens.RADIUS_SM}px;
-                font-weight: 600;
-                font-size: {tokens.get_font_size('normal')}px;
-                min-width: 80px;
-            }}
-            QPushButton:hover {{
-                background-color: #DC2626;
-            }}
-            QPushButton:disabled {{
-                background-color: #9CA3AF;
-            }}
-        """)
+        # 반응형 버튼들로 교체
+        self.shopping_delete_btn = ModernDangerButton("삭제")
         self.shopping_delete_btn.clicked.connect(self.delete_shopping_api)
         dev_btn_layout.addWidget(self.shopping_delete_btn)
         
-        # 적용 버튼 나중에
-        self.shopping_apply_btn = QPushButton("적용")
-        self.shopping_apply_btn.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['success']};
-                color: white;
-                border: none;
-                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
-                border-radius: {tokens.RADIUS_SM}px;
-                font-weight: 600;
-                font-size: {tokens.get_font_size('normal')}px;
-                min-width: 80px;
-            }}
-            QPushButton:hover {{
-                background-color: {ModernStyle.COLORS['secondary_hover']};
-            }}
-            QPushButton:disabled {{
-                background-color: #9CA3AF;
-            }}
-        """)
+        self.shopping_apply_btn = ModernSuccessButton("적용")
         self.shopping_apply_btn.clicked.connect(self.apply_shopping_api)
         dev_btn_layout.addWidget(self.shopping_apply_btn)
         dev_btn_layout.addStretch()
@@ -213,49 +191,12 @@ class APISettingsDialog(QDialog):
         
         # 검색광고 API 버튼
         searchad_btn_layout = QHBoxLayout()
-        # 삭제 버튼 먼저
-        self.searchad_delete_btn = QPushButton("삭제")
-        self.searchad_delete_btn.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['danger']};
-                color: white;
-                border: none;
-                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
-                border-radius: {tokens.RADIUS_SM}px;
-                font-weight: 600;
-                font-size: {tokens.get_font_size('normal')}px;
-                min-width: 80px;
-            }}
-            QPushButton:hover {{
-                background-color: #DC2626;
-            }}
-            QPushButton:disabled {{
-                background-color: #9CA3AF;
-            }}
-        """)
+        # 반응형 버튼들로 교체
+        self.searchad_delete_btn = ModernDangerButton("삭제")
         self.searchad_delete_btn.clicked.connect(self.delete_searchad_api)
         searchad_btn_layout.addWidget(self.searchad_delete_btn)
         
-        # 적용 버튼 나중에
-        self.searchad_apply_btn = QPushButton("적용")
-        self.searchad_apply_btn.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['success']};
-                color: white;
-                border: none;
-                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
-                border-radius: {tokens.RADIUS_SM}px;
-                font-weight: 600;
-                font-size: {tokens.get_font_size('normal')}px;
-                min-width: 80px;
-            }}
-            QPushButton:hover {{
-                background-color: {ModernStyle.COLORS['secondary_hover']};
-            }}
-            QPushButton:disabled {{
-                background-color: #9CA3AF;
-            }}
-        """)
+        self.searchad_apply_btn = ModernSuccessButton("적용")
         self.searchad_apply_btn.clicked.connect(self.apply_searchad_api)
         searchad_btn_layout.addWidget(self.searchad_apply_btn)
         searchad_btn_layout.addStretch()
@@ -347,49 +288,12 @@ class APISettingsDialog(QDialog):
         # 적용/삭제 버튼
         ai_btn_layout = QHBoxLayout()
         
-        # 삭제 버튼
-        self.ai_delete_btn = QPushButton("삭제")
-        self.ai_delete_btn.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['danger']};
-                color: white;
-                border: none;
-                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
-                border-radius: {tokens.RADIUS_SM}px;
-                font-weight: 600;
-                font-size: {tokens.get_font_size('normal')}px;
-                min-width: 80px;
-            }}
-            QPushButton:hover {{
-                background-color: #DC2626;
-            }}
-            QPushButton:disabled {{
-                background-color: #9CA3AF;
-            }}
-        """)
+        # 반응형 버튼들로 교체
+        self.ai_delete_btn = ModernDangerButton("삭제")
         self.ai_delete_btn.clicked.connect(self.delete_ai_api)
         ai_btn_layout.addWidget(self.ai_delete_btn)
         
-        # 적용 버튼
-        self.ai_apply_btn = QPushButton("적용")
-        self.ai_apply_btn.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['success']};
-                color: white;
-                border: none;
-                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
-                border-radius: {tokens.RADIUS_SM}px;
-                font-weight: 600;
-                font-size: {tokens.get_font_size('normal')}px;
-                min-width: 80px;
-            }}
-            QPushButton:hover {{
-                background-color: {ModernStyle.COLORS['secondary_hover']};
-            }}
-            QPushButton:disabled {{
-                background-color: #9CA3AF;
-            }}
-        """)
+        self.ai_apply_btn = ModernSuccessButton("적용")
         self.ai_apply_btn.clicked.connect(self.apply_ai_api)
         ai_btn_layout.addWidget(self.ai_apply_btn)
         
@@ -936,100 +840,92 @@ API 키 발급 방법:
         """버튼 영역 설정"""
         button_layout = QHBoxLayout()
         
-        # 모든 API 삭제 버튼 (맨 왼쪽)
-        delete_all_btn = QPushButton("모든 API 삭제")
-        delete_all_btn.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['danger']};
-                color: white;
-                border: none;
-                padding: {tokens.GAP_10}px {tokens.GAP_20}px;
-                border-radius: {tokens.RADIUS_SM}px;
-                font-size: {tokens.get_font_size('normal')}px;
-                font-weight: 600;
-                min-width: 120px;
-            }}
-            QPushButton:hover {{
-                background-color: #DC2626;
-            }}
-        """)
+        # 반응형 버튼들로 교체
+        delete_all_btn = ModernDangerButton("모든 API 삭제")
         delete_all_btn.clicked.connect(self.delete_all_apis)
         button_layout.addWidget(delete_all_btn)
         
         # 가운데 공간
         button_layout.addStretch()
         
-        # 취소 버튼
-        cancel_btn = QPushButton("취소")
+        # 취소 버튼 (기본 스타일로 놔둠)
+        from src.toolbox.ui_kit.components import ModernButton
+        cancel_btn = ModernButton("취소", "secondary")
         cancel_btn.clicked.connect(self.reject)
         button_layout.addWidget(cancel_btn)
         
         # 저장 버튼
-        save_btn = QPushButton("저장")
-        save_btn.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['success']};
-                color: white;
-                border: none;
-                padding: {tokens.GAP_10}px {tokens.GAP_20}px;
-                border-radius: {tokens.RADIUS_SM}px;
-                font-size: {tokens.get_font_size('normal')}px;
-                font-weight: 600;
-                min-width: 100px;
-            }}
-            QPushButton:hover {{
-                background-color: {ModernStyle.COLORS['secondary_hover']};
-            }}
-        """)
+        save_btn = ModernSuccessButton("저장")
         save_btn.clicked.connect(self.save_settings)
         button_layout.addWidget(save_btn)
         
         layout.addLayout(button_layout)
     
     def apply_styles(self):
-        """스타일 적용"""
+        """반응형 스타일 적용"""
+        scale = tokens.get_screen_scale_factor()
+        
+        # 스케일링된 크기 계산
+        border_radius_sm = int(8 * scale)
+        border_radius_xs = int(6 * scale)
+        border_width = int(1 * scale)
+        border_width_lg = int(2 * scale)
+        padding_tab_v = int(10 * scale)
+        padding_tab_h = int(20 * scale)
+        padding_input_v = int(8 * scale)
+        padding_input_h = int(12 * scale)
+        padding_btn_v = int(tokens.GAP_10 * scale)
+        padding_btn_h = int(tokens.GAP_20 * scale)
+        margin_v = int(10 * scale)
+        margin_right = int(2 * scale)
+        padding_top = int(10 * scale)
+        left_pos = int(10 * scale)
+        title_padding = int(8 * scale)
+        min_width_btn = int(100 * scale)
+        font_size_normal = int(tokens.get_font_size('normal') * scale)
+        
         self.setStyleSheet(f"""
             QDialog {{
                 background-color: {ModernStyle.COLORS['bg_primary']};
                 color: {ModernStyle.COLORS['text_primary']};
             }}
             QTabWidget::pane {{
-                border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
+                border: {border_width}px solid {ModernStyle.COLORS['border']};
+                border-radius: {border_radius_sm}px;
                 background-color: {ModernStyle.COLORS['bg_card']};
             }}
             QTabBar::tab {{
                 background-color: {ModernStyle.COLORS['bg_input']};
-                border: 1px solid {ModernStyle.COLORS['border']};
-                padding: 10px 20px;
-                margin-right: 2px;
+                border: {border_width}px solid {ModernStyle.COLORS['border']};
+                padding: {padding_tab_v}px {padding_tab_h}px;
+                margin-right: {margin_right}px;
                 border-bottom: none;
                 font-weight: 500;
             }}
             QTabBar::tab:selected {{
                 background-color: {ModernStyle.COLORS['bg_card']};
-                border-bottom: 1px solid {ModernStyle.COLORS['bg_card']};
+                border-bottom: {border_width}px solid {ModernStyle.COLORS['bg_card']};
                 font-weight: 600;
             }}
             QGroupBox {{
-                font-size: {tokens.get_font_size('normal')}px;
+                font-size: {font_size_normal}px;
                 font-weight: 600;
-                border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
-                margin: 10px 0;
-                padding-top: 10px;
+                border: {border_width_lg}px solid {ModernStyle.COLORS['border']};
+                border-radius: {border_radius_sm}px;
+                margin: {margin_v}px 0;
+                padding-top: {padding_top}px;
             }}
             QGroupBox::title {{
                 subcontrol-origin: margin;
-                left: 10px;
-                padding: 0 8px;
+                left: {left_pos}px;
+                padding: 0 {title_padding}px;
                 background-color: {ModernStyle.COLORS['bg_card']};
             }}
             QLineEdit {{
-                padding: 8px 12px;
-                border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: 6px;
-                font-size: {tokens.get_font_size('normal')}px;
+                padding: {padding_input_v}px {padding_input_h}px;
+                border: {border_width_lg}px solid {ModernStyle.COLORS['border']};
+                border-radius: {border_radius_xs}px;
+                font-size: {font_size_normal}px;
                 background-color: {ModernStyle.COLORS['bg_primary']};
             }}
             QLineEdit:focus {{
@@ -1039,11 +935,11 @@ API 키 발급 방법:
                 background-color: {ModernStyle.COLORS['primary']};
                 color: white;
                 border: none;
-                padding: {tokens.GAP_10}px {tokens.GAP_20}px;
+                padding: {padding_btn_v}px {padding_btn_h}px;
                 border-radius: {tokens.RADIUS_SM}px;
-                font-size: {tokens.get_font_size('normal')}px;
+                font-size: {font_size_normal}px;
                 font-weight: 600;
-                min-width: 100px;
+                min-width: {min_width_btn}px;
             }}
             QPushButton:hover {{
                 background-color: {ModernStyle.COLORS['primary_hover']};
