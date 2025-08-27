@@ -76,9 +76,13 @@ class PowerLinkControlWidget(QWidget):
     
         
     def setup_ui(self):
-        """UI 초기화"""
+        """UI 초기화 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         layout = QVBoxLayout(self)
-        layout.setSpacing(tokens.GAP_15)
+        spacing = int(tokens.GAP_15 * scale)
+        layout.setSpacing(spacing)
         
         # 1. 진행 상황 카드
         progress_card = self.create_progress_card()

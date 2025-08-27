@@ -34,20 +34,23 @@ class PowerLinkSaveDialog(QDialog):
         self.setup_ui()
         
     def setup_ui(self):
-        """UI 초기화 (글씨 잘림 방지 및 크기 조정)"""
+        """UI 초기화 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         self.setWindowTitle("저장 완료")
         self.setModal(True)
-        dialog_width = 380  # 적절한 크기 유지
-        dialog_height = 200  # 적절한 크기 유지
-        self.setFixedSize(dialog_width, dialog_height)  # 크기 증가로 글씨 잘림 방지
+        dialog_width = int(380 * scale)  # 반응형 크기
+        dialog_height = int(200 * scale)  # 반응형 크기
+        self.setFixedSize(dialog_width, dialog_height)
         
-        # 메인 레이아웃
+        # 메인 레이아웃 - 반응형 스케일링 적용
         layout = QVBoxLayout(self)
-        layout.setSpacing(tokens.GAP_15)
-        layout.setContentsMargins(
-            tokens.GAP_32, tokens.GAP_24, 
-            tokens.GAP_32, tokens.GAP_24
-        )
+        spacing = int(tokens.GAP_15 * scale)
+        margin_h = int(tokens.GAP_32 * scale)
+        margin_v = int(tokens.GAP_24 * scale)
+        layout.setSpacing(spacing)
+        layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
         
         # 체크 아이콘과 제목
         title_layout = QHBoxLayout()
@@ -194,21 +197,26 @@ class PowerLinkResultsWidget(QWidget):
             logger.error(f"초기 히스토리 로드 실패: {e}")
         
     def setup_ui(self):
-        """UI 초기화"""
-        layout = QVBoxLayout(self)
-        layout.setSpacing(tokens.GAP_15)
+        """UI 초기화 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
         
-        # 탭 위젯 생성
+        layout = QVBoxLayout(self)
+        spacing = int(tokens.GAP_15 * scale)
+        layout.setSpacing(spacing)
+        
+        # 탭 위젯 생성 - 반응형 스케일링 적용
         self.tab_widget = QTabWidget()
-        tab_radius = tokens.GAP_8
-        tab_padding = tokens.GAP_10
-        tab_button_padding_v = tokens.GAP_12
-        tab_button_padding_h = tokens.GAP_20
-        tab_margin = tokens.GAP_2
-        tab_font_size = tokens.get_font_size('normal')
+        tab_radius = int(tokens.GAP_8 * scale)
+        tab_padding = int(tokens.GAP_10 * scale)
+        tab_button_padding_v = int(tokens.GAP_12 * scale)
+        tab_button_padding_h = int(tokens.GAP_20 * scale)
+        tab_margin = int(tokens.GAP_2 * scale)
+        tab_font_size = int(tokens.get_font_size('normal') * scale)
+        border_width = int(2 * scale)
         self.tab_widget.setStyleSheet(f"""
             QTabWidget::pane {{
-                border: 2px solid {ModernStyle.COLORS['border']};
+                border: {border_width}px solid {ModernStyle.COLORS['border']};
                 border-radius: {tab_radius}px;
                 background-color: {ModernStyle.COLORS['bg_card']};
                 padding: {tab_padding}px;
@@ -265,10 +273,14 @@ class PowerLinkResultsWidget(QWidget):
         layout.addLayout(button_layout)
         
     def create_mobile_tab(self) -> QWidget:
-        """모바일 탭 생성"""
+        """모바일 탭 생성 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         tab = QWidget()
         layout = QVBoxLayout(tab)
-        layout.setSpacing(10)
+        spacing = int(10 * scale)
+        layout.setSpacing(spacing)
         
         # 선택 삭제 버튼
         button_layout = QHBoxLayout()
@@ -286,10 +298,14 @@ class PowerLinkResultsWidget(QWidget):
         return tab
         
     def create_pc_tab(self) -> QWidget:
-        """PC 탭 생성"""
+        """PC 탭 생성 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         tab = QWidget()
         layout = QVBoxLayout(tab)
-        layout.setSpacing(10)
+        spacing = int(10 * scale)
+        layout.setSpacing(spacing)
         
         # 선택 삭제 버튼
         button_layout = QHBoxLayout()

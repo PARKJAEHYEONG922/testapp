@@ -80,12 +80,15 @@ class KeywordAnalysisWidget(QWidget):
         self.setLayout(main_layout)
     
     def setup_header(self, layout):
-        """헤더 섹션 (제목 + 사용법 툴팁)"""
+        """헤더 섹션 (제목 + 사용법 툴팁) - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         header_layout = QHBoxLayout()
         
-        # 제목 - 토큰 기반 폰트
+        # 제목 - 반응형 스케일링 적용
         title_label = QLabel("🔍 키워드 검색기")
-        title_font_size = tokens.get_font_size('title')
+        title_font_size = int(tokens.get_font_size('title') * scale)
         title_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {title_font_size}px;

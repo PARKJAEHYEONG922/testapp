@@ -1141,9 +1141,9 @@ class RankTrackingWidget(QWidget):
         
         # 화면 스케일 팩터 가져오기
         scale = tokens.get_screen_scale_factor()
-        margin_v = int(tokens.GAP_16 * scale)  # 상하 여백
+        margin = int(tokens.GAP_16 * scale)  # 사방 여백
         spacing = int(tokens.GAP_10 * scale)
-        main_layout.setContentsMargins(0, margin_v, 0, margin_v)  # 좌우 여백 제거, 상하만 유지
+        main_layout.setContentsMargins(margin, margin, margin, margin)  # 헤더 정렬을 위해 사방 여백 적용
         main_layout.setSpacing(spacing)
         
         # 헤더 (제목 + 사용법 툴팁)
@@ -1219,12 +1219,15 @@ class RankTrackingWidget(QWidget):
                 log_manager.add_log(f"📋 프로젝트 목록 로드됨: {len(projects)}개", "info")
     
     def setup_header(self, layout):
-        """헤더 섹션"""
+        """헤더 섹션 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         header_layout = QHBoxLayout()
         
-        # 제목
+        # 제목 - 반응형 스케일링 적용
         title_label = QLabel("📈 상품 순위추적")
-        title_font_size = tokens.get_font_size('title')
+        title_font_size = int(tokens.get_font_size('title') * scale)
         title_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {title_font_size}px;

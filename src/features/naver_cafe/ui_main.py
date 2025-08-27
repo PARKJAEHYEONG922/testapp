@@ -66,12 +66,15 @@ class NaverCafeWidget(QWidget):
         main_layout.addLayout(content_layout)
         
     def setup_header(self, layout):
-        """헤더 섹션 (제목 + 사용법)"""
+        """헤더 섹션 (제목 + 사용법) - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         header_layout = QHBoxLayout()
         
-        # 제목
+        # 제목 - 반응형 스케일링 적용
         title_label = QLabel("🌐 네이버카페 DB추출")
-        title_font_size = tokens.get_font_size('title')
+        title_font_size = int(tokens.get_font_size('title') * scale)
         title_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {title_font_size}px;

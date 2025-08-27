@@ -48,25 +48,27 @@ class PowerLinkAnalyzerWidget(QWidget):
                 pass  # 오류는 무시
         
     def setup_ui(self):
-        """UI 초기화"""
+        """UI 초기화 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(
-            tokens.GAP_20, tokens.GAP_20, 
-            tokens.GAP_20, tokens.GAP_20
-        )
-        main_layout.setSpacing(tokens.GAP_20)
+        margin = int(tokens.GAP_20 * scale)
+        spacing = int(tokens.GAP_20 * scale)
+        main_layout.setContentsMargins(margin, margin, margin, margin)
+        main_layout.setSpacing(spacing)
         
         # 헤더 섹션 (제목 + 사용법)
         self.setup_header(main_layout)
         
         # 컨텐츠 레이아웃 (좌측 패널 + 우측 패널)
         content_layout = QHBoxLayout()
-        content_layout.setSpacing(tokens.GAP_20)
+        content_spacing = int(tokens.GAP_20 * scale)
+        content_layout.setSpacing(content_spacing)
         
-        # 좌측 패널 (컨트롤 위젯)
+        # 좌측 패널 (컨트롤 위젯) - 반응형 너비 적용
         self.control_widget = PowerLinkControlWidget()
-        # 200px 기준으로 반응형 조정하되 최소 150px 보장
-        control_width = max(200, 280)  # 넓이 증가 (200 → 280)
+        control_width = int(280 * scale)  # 280px 기준에 스케일 적용
         self.control_widget.setFixedWidth(control_width)
         
         # 우측 패널 (결과 위젯)
@@ -81,12 +83,15 @@ class PowerLinkAnalyzerWidget(QWidget):
         main_layout.addLayout(content_layout)
         
     def setup_header(self, layout):
-        """헤더 섹션 (제목 + 사용법)"""
+        """헤더 섹션 (제목 + 사용법) - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         header_layout = QHBoxLayout()
         
-        # 제목
+        # 제목 - 반응형 스케일링 적용
         title_label = QLabel("💰 파워링크 광고비")
-        title_font_size = tokens.get_font_size('title')
+        title_font_size = int(tokens.get_font_size('title') * scale)
         title_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {title_font_size}px;
