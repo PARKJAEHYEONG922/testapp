@@ -28,36 +28,46 @@ class ModernConfirmDialog(QDialog):
             self.center_on_parent()
     
     def setup_ui(self):
-        """UI 구성"""
+        """UI 구성 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         self.setWindowFlags(Qt.Dialog | Qt.WindowCloseButtonHint | Qt.WindowStaysOnTopHint)
         self.setModal(True)  # 모달 다이얼로그로 설정
         self.setWindowTitle(self.title)
         
-        # 메인 레이아웃
+        # 메인 레이아웃 - 반응형 스케일링 적용
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(20, 15, 20, 15)
-        main_layout.setSpacing(15)
+        margin_h = int(20 * scale)
+        margin_v = int(15 * scale)
+        spacing = int(15 * scale)
+        main_layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
+        main_layout.setSpacing(spacing)
         
-        # 헤더 (아이콘 + 제목)
+        # 헤더 (아이콘 + 제목) - 반응형 스케일링 적용
         header_layout = QHBoxLayout()
-        header_layout.setSpacing(10)
+        header_spacing = int(10 * scale)
+        header_layout.setSpacing(header_spacing)
         
-        # 아이콘
+        # 아이콘 - 반응형 스케일링 적용
         icon_label = QLabel(self.icon)
+        icon_font_size = int(16 * scale)
+        icon_min_width = int(20 * scale)
         icon_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 16px;
+                font-size: {icon_font_size}px;
                 color: {ModernStyle.COLORS['text_secondary']};
-                min-width: 20px;
+                min-width: {icon_min_width}px;
             }}
         """)
         header_layout.addWidget(icon_label)
         
-        # 제목
+        # 제목 - 반응형 스케일링 적용
         title_label = QLabel(self.title)
+        title_font_size = int(16 * scale)
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 16px;
+                font-size: {title_font_size}px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -67,18 +77,24 @@ class ModernConfirmDialog(QDialog):
         
         main_layout.addLayout(header_layout)
         
-        # 메시지
+        # 메시지 - 반응형 스케일링 적용
         message_label = QLabel(self.message)
+        message_font_size = int(14 * scale)
+        message_margin_h = int(20 * scale)
+        message_margin_v = int(10 * scale)
+        message_padding = int(15 * scale)
+        message_radius = int(8 * scale)
+        message_border_width = int(1 * scale)
         message_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 14px;
+                font-size: {message_font_size}px;
                 color: {ModernStyle.COLORS['text_secondary']};
                 line-height: 1.5;
-                margin: 10px 20px;
-                padding: 15px;
+                margin: {message_margin_v}px {message_margin_h}px;
+                padding: {message_padding}px;
                 background-color: {ModernStyle.COLORS['bg_input']};
-                border-radius: 8px;
-                border: 1px solid {ModernStyle.COLORS['border']};
+                border-radius: {message_radius}px;
+                border: {message_border_width}px solid {ModernStyle.COLORS['border']};
             }}
         """)
         message_label.setWordWrap(True)
@@ -87,24 +103,32 @@ class ModernConfirmDialog(QDialog):
         
         main_layout.addStretch()
         
-        # 버튼 영역
+        # 버튼 영역 - 반응형 스케일링 적용
         button_layout = QHBoxLayout()
-        button_layout.setSpacing(10)
+        button_spacing = int(10 * scale)
+        button_layout.setSpacing(button_spacing)
         button_layout.addStretch()
         
         # 취소 버튼 (cancel_text가 None이 아닐 때만 표시)
         if self.cancel_text is not None:
             self.cancel_button = QPushButton(self.cancel_text)
             self.cancel_button.clicked.connect(self.reject)
+            # 취소 버튼 스타일 - 반응형 스케일링 적용
+            cancel_padding_v = int(10 * scale)
+            cancel_padding_h = int(18 * scale)
+            cancel_radius = int(6 * scale)
+            cancel_font_size = int(13 * scale)
+            cancel_min_width = int(80 * scale)
+            cancel_border_width = int(1 * scale)
             self.cancel_button.setStyleSheet(f"""
                 QPushButton {{
                     background-color: {ModernStyle.COLORS['bg_input']};
                     color: {ModernStyle.COLORS['text_primary']};
-                    border: 1px solid {ModernStyle.COLORS['border']};
-                    padding: 10px 18px;
-                    border-radius: 6px;
-                    font-size: 13px;
-                    min-width: 80px;
+                    border: {cancel_border_width}px solid {ModernStyle.COLORS['border']};
+                    padding: {cancel_padding_v}px {cancel_padding_h}px;
+                    border-radius: {cancel_radius}px;
+                    font-size: {cancel_font_size}px;
+                    min-width: {cancel_min_width}px;
                 }}
                 QPushButton:hover {{
                     background-color: {ModernStyle.COLORS['border']};
@@ -117,16 +141,22 @@ class ModernConfirmDialog(QDialog):
         # 확인 버튼
         self.confirm_button = QPushButton(self.confirm_text)
         self.confirm_button.clicked.connect(self.accept)
+        # 확인 버튼 스타일 - 반응형 스케일링 적용
+        confirm_padding_v = int(10 * scale)
+        confirm_padding_h = int(18 * scale)
+        confirm_radius = int(6 * scale)
+        confirm_font_size = int(13 * scale)
+        confirm_min_width = int(80 * scale)
         self.confirm_button.setStyleSheet(f"""
             QPushButton {{
                 background-color: {ModernStyle.COLORS['primary']};
                 color: white;
                 border: none;
-                padding: 10px 18px;
-                border-radius: 6px;
-                font-size: 13px;
+                padding: {confirm_padding_v}px {confirm_padding_h}px;
+                border-radius: {confirm_radius}px;
+                font-size: {confirm_font_size}px;
                 font-weight: 500;
-                min-width: 80px;
+                min-width: {confirm_min_width}px;
             }}
             QPushButton:hover {{
                 background-color: {ModernStyle.COLORS['primary']}dd;
@@ -145,26 +175,26 @@ class ModernConfirmDialog(QDialog):
         message_lines = self.message.count('\n') + 1
         message_length = len(self.message)
         
-        # 기본 크기 설정
-        base_width = 400
-        base_height = 180
+        # 기본 크기 설정 - 반응형 스케일링 적용
+        base_width = int(400 * scale)
+        base_height = int(180 * scale)
         
-        # 텍스트 길이에 따른 너비 조정 (최대 600px)
+        # 텍스트 길이에 따른 너비 조정 (최대 600px) - 반응형 스케일링 적용
         if message_length > 100:
-            additional_width = min(200, (message_length - 100) * 2)
+            additional_width = min(int(200 * scale), int((message_length - 100) * 2 * scale))
             base_width += additional_width
         
-        # 줄 수에 따른 높이 조정
+        # 줄 수에 따른 높이 조정 - 반응형 스케일링 적용
         if message_lines > 3:
-            additional_height = (message_lines - 3) * 25
+            additional_height = int((message_lines - 3) * 25 * scale)
             base_height += additional_height
         
-        # 최소/최대 크기 설정
-        final_width = max(350, min(600, base_width))
-        final_height = max(180, min(400, base_height))
+        # 최소/최대 크기 설정 - 반응형 스케일링 적용
+        final_width = max(int(350 * scale), min(int(600 * scale), base_width))
+        final_height = max(int(180 * scale), min(int(400 * scale), base_height))
         
         self.setMinimumWidth(final_width)
-        self.setMaximumWidth(final_width + 50)  # 약간의 여유 공간
+        self.setMaximumWidth(final_width + int(50 * scale))  # 약간의 여유 공간
         self.resize(final_width, final_height)
     
     def center_on_parent(self):
@@ -259,7 +289,10 @@ class ModernInfoDialog(QDialog):
         self.center_on_parent()
     
     def setup_ui(self):
-        """UI 구성 - 개선된 커스텀 디자인"""
+        """UI 구성 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         self.setWindowFlags(Qt.Dialog | Qt.WindowCloseButtonHint)
         self.setWindowTitle(self.title)
         self.setModal(True)
@@ -282,32 +315,39 @@ class ModernInfoDialog(QDialog):
             bg_color = "#f8fafc"
             border_color = "#e2e8f0"
         
-        # 메인 레이아웃
+        # 메인 레이아웃 - 반응형 스케일링 적용
         layout = QVBoxLayout(self)
-        layout.setSpacing(16)
-        layout.setContentsMargins(24, 20, 24, 20)
+        layout_spacing = int(16 * scale)
+        margin_h = int(24 * scale)
+        margin_v = int(20 * scale)
+        layout.setSpacing(layout_spacing)
+        layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
         
-        # 헤더 (아이콘 + 제목)
+        # 헤더 (아이콘 + 제목) - 반응형 스케일링 적용
         header_layout = QHBoxLayout()
-        header_layout.setSpacing(12)
+        header_spacing = int(12 * scale)
+        header_layout.setSpacing(header_spacing)
         
-        # 아이콘
+        # 아이콘 - 반응형 스케일링 적용
         icon_label = QLabel(self.icon)
+        icon_font_size = int(20 * scale)
+        icon_width = int(24 * scale)
         icon_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 20px;
+                font-size: {icon_font_size}px;
                 color: {icon_color};
-                min-width: 24px;
-                max-width: 24px;
+                min-width: {icon_width}px;
+                max-width: {icon_width}px;
             }}
         """)
         header_layout.addWidget(icon_label)
         
-        # 제목
+        # 제목 - 반응형 스케일링 적용
         title_label = QLabel(self.title)
+        title_font_size = int(16 * scale)
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 16px;
+                font-size: {title_font_size}px;
                 font-weight: 600;
                 color: {icon_color};
                 margin: 0;
@@ -317,41 +357,53 @@ class ModernInfoDialog(QDialog):
         header_layout.addStretch()
         layout.addLayout(header_layout)
         
-        # 메시지
+        # 메시지 - 반응형 스케일링 적용
         message_label = QLabel(self.message)
         message_label.setWordWrap(True)
+        message_font_size = int(13 * scale)
+        message_padding_v = int(14 * scale)
+        message_padding_h = int(16 * scale)
+        message_radius = int(6 * scale)
+        message_border_width = int(1 * scale)
         message_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 13px;
+                font-size: {message_font_size}px;
                 color: #4a5568;
                 line-height: 1.6;
-                padding: 14px 16px;
+                padding: {message_padding_v}px {message_padding_h}px;
                 background-color: {bg_color};
-                border-radius: 6px;
-                border: 1px solid {border_color};
+                border-radius: {message_radius}px;
+                border: {message_border_width}px solid {border_color};
                 margin: 0;
             }}
         """)
         message_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
         layout.addWidget(message_label)
         
-        # 버튼
+        # 버튼 - 반응형 스케일링 적용
         button_layout = QHBoxLayout()
-        button_layout.setContentsMargins(0, 8, 0, 0)
+        button_margin_top = int(8 * scale)
+        button_layout.setContentsMargins(0, button_margin_top, 0, 0)
         button_layout.addStretch()
         
         self.ok_button = QPushButton("확인")
         self.ok_button.clicked.connect(self.accept)
+        # 확인 버튼 스타일 - 반응형 스케일링 적용
+        ok_padding_v = int(8 * scale)
+        ok_padding_h = int(20 * scale)
+        ok_radius = int(6 * scale)
+        ok_font_size = int(13 * scale)
+        ok_min_width = int(70 * scale)
         self.ok_button.setStyleSheet(f"""
             QPushButton {{
                 background-color: {icon_color};
                 color: white;
                 border: none;
-                padding: 8px 20px;
-                border-radius: 6px;
-                font-size: 13px;
+                padding: {ok_padding_v}px {ok_padding_h}px;
+                border-radius: {ok_radius}px;
+                font-size: {ok_font_size}px;
                 font-weight: 500;
-                min-width: 70px;
+                min-width: {ok_min_width}px;
             }}
             QPushButton:hover {{
                 background-color: {icon_color}dd;
@@ -368,26 +420,26 @@ class ModernInfoDialog(QDialog):
         # 크기를 내용에 맞게 동적 조정
         self.adjustSize()
         
-        # 최소/최대 크기 설정
-        min_width = 350
-        max_width = 500
-        min_height = 150
-        max_height = 400
+        # 최소/최대 크기 설정 - 반응형 스케일링 적용
+        min_width = int(350 * scale)
+        max_width = int(500 * scale)
+        min_height = int(150 * scale)
+        max_height = int(400 * scale)
         
         # 메시지 길이에 따른 크기 조정
         message_lines = self.message.count('\n') + 1
         message_length = len(self.message)
         
-        # 너비 계산
+        # 너비 계산 - 반응형 스케일링 적용
         if message_length > 80:
-            width = min(max_width, min_width + (message_length - 80) * 1.5)
+            width = min(max_width, min_width + int((message_length - 80) * 1.5 * scale))
         else:
             width = min_width
             
-        # 높이 계산
-        base_height = 180
+        # 높이 계산 - 반응형 스케일링 적용
+        base_height = int(180 * scale)
         if message_lines > 2:
-            height = min(max_height, base_height + (message_lines - 2) * 20)
+            height = min(max_height, base_height + int((message_lines - 2) * 20 * scale))
         else:
             height = base_height
             
@@ -494,42 +546,55 @@ class ModernHelpDialog(QDialog):
         self.position_dialog()
     
     def setup_ui(self):
-        """UI 구성 - 깔끔하고 단순한 디자인"""
+        """UI 구성 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         self.setWindowFlags(Qt.Dialog)
         self.setWindowTitle(self.title)
         
-        # 메인 레이아웃
+        # 메인 레이아웃 - 반응형 스케일링 적용
         layout = QVBoxLayout()
-        layout.setContentsMargins(20, 15, 20, 15)
-        layout.setSpacing(15)
+        margin_h = int(20 * scale)
+        margin_v = int(15 * scale)
+        layout_spacing = int(15 * scale)
+        layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
+        layout.setSpacing(layout_spacing)
         
-        # 헤더
+        # 헤더 - 반응형 스케일링 적용
         header_layout = QHBoxLayout()
-        header_layout.setSpacing(10)
+        header_spacing = int(10 * scale)
+        header_layout.setSpacing(header_spacing)
         
-        # 아이콘
+        # 아이콘 - 반응형 스케일링 적용
         icon_label = QLabel("📖")
+        icon_font_size = int(20 * scale)
+        icon_radius = int(8 * scale)
+        icon_padding = int(8 * scale)
+        icon_min_width = int(24 * scale)
         icon_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 20px;
+                font-size: {icon_font_size}px;
                 color: {ModernStyle.COLORS['primary']};
                 background-color: {ModernStyle.COLORS['primary']}15;
-                border-radius: 8px;
-                padding: 8px;
-                min-width: 24px;
+                border-radius: {icon_radius}px;
+                padding: {icon_padding}px;
+                min-width: {icon_min_width}px;
                 qproperty-alignment: AlignCenter;
             }}
         """)
         header_layout.addWidget(icon_label)
         
-        # 제목
+        # 제목 - 반응형 스케일링 적용
         title_label = QLabel(self.title)
+        title_font_size = int(17 * scale)
+        title_margin_left = int(4 * scale)
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 17px;
+                font-size: {title_font_size}px;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
-                margin-left: 4px;
+                margin-left: {title_margin_left}px;
             }}
         """)
         header_layout.addWidget(title_label)
@@ -537,20 +602,25 @@ class ModernHelpDialog(QDialog):
         
         layout.addLayout(header_layout)
         
-        # 메시지 (한 번만 추가)
+        # 메시지 - 반응형 스케일링 적용
         message_label = QLabel()
         message_label.setText(self.message)
+        message_font_size = int(13 * scale)
+        message_margin_lr = int(4 * scale)
+        message_radius = int(8 * scale)
+        message_padding = int(18 * scale)
+        message_border_width = int(1 * scale)
         message_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 13px;
+                font-size: {message_font_size}px;
                 color: {ModernStyle.COLORS['text_secondary']};
                 line-height: 1.6;
-                margin-left: 4px;
-                margin-right: 4px;
+                margin-left: {message_margin_lr}px;
+                margin-right: {message_margin_lr}px;
                 background-color: {ModernStyle.COLORS['bg_input']};
-                border-radius: 8px;
-                padding: 18px;
-                border: 1px solid {ModernStyle.COLORS['border']};
+                border-radius: {message_radius}px;
+                padding: {message_padding}px;
+                border: {message_border_width}px solid {ModernStyle.COLORS['border']};
             }}
         """)
         message_label.setWordWrap(True)
@@ -563,16 +633,22 @@ class ModernHelpDialog(QDialog):
         
         ok_button = QPushButton("확인")
         ok_button.clicked.connect(self.accept)
+        # 확인 버튼 스타일 - 반응형 스케일링 적용
+        ok_padding_v = int(10 * scale)
+        ok_padding_h = int(24 * scale)
+        ok_radius = int(6 * scale)
+        ok_font_size = int(13 * scale)
+        ok_min_width = int(80 * scale)
         ok_button.setStyleSheet(f"""
             QPushButton {{
                 background-color: {ModernStyle.COLORS['primary']};
                 color: white;
                 border: none;
-                padding: 10px 24px;
-                border-radius: 6px;
-                font-size: 13px;
+                padding: {ok_padding_v}px {ok_padding_h}px;
+                border-radius: {ok_radius}px;
+                font-size: {ok_font_size}px;
                 font-weight: 600;
-                min-width: 80px;
+                min-width: {ok_min_width}px;
             }}
             QPushButton:hover {{
                 background-color: {ModernStyle.COLORS['primary']}dd;
@@ -587,11 +663,11 @@ class ModernHelpDialog(QDialog):
         layout.addLayout(button_layout)
         self.setLayout(layout)
         
-        # 크기를 내용에 맞게 조정
+        # 크기를 내용에 맞게 조정 - 반응형 스케일링 적용
         self.adjustSize()
-        self.setMinimumWidth(500)
-        self.setMaximumWidth(600)
-        self.setMaximumHeight(700)
+        self.setMinimumWidth(int(500 * scale))
+        self.setMaximumWidth(int(600 * scale))
+        self.setMaximumHeight(int(700 * scale))
     
     def position_dialog(self):
         """버튼 위치 근처에 다이얼로그 표시"""
@@ -842,18 +918,25 @@ class ModernSaveCompletionDialog(QDialog):
         self.center_on_parent()
     
     def setup_ui(self):
-        """UI 구성"""
+        """UI 구성 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         self.setWindowFlags(Qt.Dialog)
         self.setWindowTitle(self.title)
         
-        # 메인 레이아웃
+        # 메인 레이아웃 - 반응형 스케일링 적용
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(25, 20, 25, 20)
-        main_layout.setSpacing(15)
+        margin_h = int(25 * scale)
+        margin_v = int(20 * scale)
+        layout_spacing = int(15 * scale)
+        main_layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
+        main_layout.setSpacing(layout_spacing)
         
-        # 헤더 (아이콘 + 제목)
+        # 헤더 (아이콘 + 제목) - 반응형 스케일링 적용
         header_layout = QHBoxLayout()
-        header_layout.setSpacing(12)
+        header_spacing = int(12 * scale)
+        header_layout.setSpacing(header_spacing)
         
         # 성공 아이콘
         icon_label = QLabel("✅")

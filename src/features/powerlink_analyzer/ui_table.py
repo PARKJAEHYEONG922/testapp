@@ -56,9 +56,9 @@ class PowerLinkSaveDialog(QDialog):
         title_layout = QHBoxLayout()
         title_layout.setAlignment(Qt.AlignCenter)
         
-        # 체크 아이콘
+        # 체크 아이콘 - 반응형 스케일링 적용
         icon_label = QLabel("✅")
-        icon_font_size = tokens.get_font_size('large')
+        icon_font_size = int(tokens.get_font_size('large') * scale)
         icon_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {icon_font_size}px;
@@ -67,10 +67,10 @@ class PowerLinkSaveDialog(QDialog):
         """)
         title_layout.addWidget(icon_label)
         
-        # 제목 텍스트
+        # 제목 텍스트 - 반응형 스케일링 적용
         title_label = QLabel("저장 완료")
-        title_font_size = tokens.get_font_size('header')
-        title_margin = tokens.GAP_8
+        title_font_size = int(tokens.get_font_size('header') * scale)
+        title_margin = int(tokens.GAP_8 * scale)
         title_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {title_font_size}px;
@@ -90,8 +90,8 @@ class PowerLinkSaveDialog(QDialog):
             message_text = "프로그램 데이터베이스에 기록이 저장되었습니다."
             
         message_label = QLabel(message_text)
-        message_font_size = tokens.get_font_size('normal')
-        message_padding = tokens.GAP_5
+        message_font_size = int(tokens.get_font_size('normal') * scale)
+        message_padding = int(tokens.GAP_5 * scale)
         message_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {message_font_size}px;
@@ -104,10 +104,10 @@ class PowerLinkSaveDialog(QDialog):
         message_label.setWordWrap(True)  # 자동 줄바꿈
         layout.addWidget(message_label)
         
-        # 안내 메시지
+        # 안내 메시지 - 반응형 스케일링 적용
         guide_label = QLabel("엑셀로 내보내기도 원하시면 내보내기 버튼을\n눌러주세요.")
-        guide_font_size = tokens.get_font_size('normal')
-        guide_padding = tokens.GAP_5
+        guide_font_size = int(tokens.get_font_size('normal') * scale)
+        guide_padding = int(tokens.GAP_5 * scale)
         guide_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {guide_font_size}px;
@@ -123,13 +123,14 @@ class PowerLinkSaveDialog(QDialog):
         
         layout.addStretch()
         
-        # 버튼들
+        # 버튼들 - 반응형 스케일링 적용
         button_layout = QHBoxLayout()
-        button_layout.setSpacing(tokens.GAP_10)
+        button_spacing = int(tokens.GAP_10 * scale)
+        button_layout.setSpacing(button_spacing)
         
-        # 엑셀 내보내기 버튼 (파란색)
-        button_height = tokens.GAP_40
-        button_width = tokens.GAP_130
+        # 엑셀 내보내기 버튼 (파란색) - 반응형 스케일링 적용
+        button_height = int(tokens.GAP_40 * scale)
+        button_width = int(tokens.GAP_130 * scale)
         self.export_button = ModernButton("📊 엑셀 내보내기", "primary")
         self.export_button.setMinimumHeight(button_height)
         self.export_button.setMinimumWidth(button_width)

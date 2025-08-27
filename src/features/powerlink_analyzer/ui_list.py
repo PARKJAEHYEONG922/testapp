@@ -100,19 +100,24 @@ class PowerLinkControlWidget(QWidget):
         layout.addStretch()
         
     def create_progress_card(self) -> ModernCard:
-        """진행 상황 카드"""
+        """진행 상황 카드 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         card = ModernCard("📊 진행 상황")
         layout = QVBoxLayout(card)
-        layout.setSpacing(tokens.GAP_10)
+        spacing = int(tokens.GAP_10 * scale)
+        layout.setSpacing(spacing)
         
-        # 진행률 표시
+        # 진행률 표시 - 반응형 스케일링 적용
         self.progress_bar = QProgressBar()
-        progress_height = tokens.GAP_24
-        border_radius = tokens.GAP_8
-        chunk_radius = tokens.GAP_6
+        progress_height = int(tokens.GAP_24 * scale)
+        border_radius = int(tokens.GAP_8 * scale)
+        chunk_radius = int(tokens.GAP_6 * scale)
+        border_width = int(2 * scale)
         self.progress_bar.setStyleSheet(f"""
             QProgressBar {{
-                border: 2px solid {ModernStyle.COLORS['border']};
+                border: {border_width}px solid {ModernStyle.COLORS['border']};
                 border-radius: {border_radius}px;
                 text-align: center;
                 background-color: {ModernStyle.COLORS['bg_input']};
@@ -126,10 +131,10 @@ class PowerLinkControlWidget(QWidget):
         """)
         self.progress_bar.setVisible(False)  # 처음엔 숨김
         
-        # 상태 메시지
+        # 상태 메시지 - 반응형 스케일링 적용
         self.status_label = QLabel("분석 대기 중...")
-        status_font_size = tokens.get_font_size('normal')
-        status_padding = tokens.GAP_5
+        status_font_size = int(tokens.get_font_size('normal') * scale)
+        status_padding = int(tokens.GAP_5 * scale)
         self.status_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_secondary']};
@@ -139,13 +144,14 @@ class PowerLinkControlWidget(QWidget):
             }}
         """)
         
-        # 키워드 개수 표시 레이블
+        # 키워드 개수 표시 레이블 - 반응형 스케일링 적용
         self.keyword_count_label = QLabel("등록된 키워드: 0개")
-        count_font_size = tokens.get_font_size('normal')
-        count_padding_v = tokens.GAP_3
-        count_padding_h = tokens.GAP_8
-        count_radius = tokens.GAP_6
-        count_margin = tokens.GAP_5
+        count_font_size = int(tokens.get_font_size('normal') * scale)
+        count_padding_v = int(tokens.GAP_3 * scale)
+        count_padding_h = int(tokens.GAP_8 * scale)
+        count_radius = int(tokens.GAP_6 * scale)
+        count_margin = int(tokens.GAP_5 * scale)
+        count_border_width = int(1 * scale)
         self.keyword_count_label.setStyleSheet(f"""
             QLabel {{
                 color: #10b981;
@@ -153,7 +159,7 @@ class PowerLinkControlWidget(QWidget):
                 font-weight: 600;
                 padding: {count_padding_v}px {count_padding_h}px;
                 background-color: rgba(16, 185, 129, 0.1);
-                border: 1px solid rgba(16, 185, 129, 0.3);
+                border: {count_border_width}px solid rgba(16, 185, 129, 0.3);
                 border-radius: {count_radius}px;
                 margin-top: {count_margin}px;
             }}
@@ -167,41 +173,20 @@ class PowerLinkControlWidget(QWidget):
         return card
         
     def create_keyword_input_card(self) -> ModernCard:
-        """키워드 입력 카드"""
-        card = ModernCard("📝 키워드 입력")
+        """키워드 입력 카드 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
         
-        # 컴팩트한 스타일
-        card_font_size = tokens.get_font_size('normal')
-        card_radius = tokens.GAP_12
-        card_margin = tokens.GAP_5
-        card_padding = tokens.GAP_5
-        card_left = tokens.GAP_15
-        card_title_padding = tokens.GAP_8
-        card.setStyleSheet(f"""
-            QGroupBox {{
-                font-size: {card_font_size}px;
-                font-weight: 600;
-                border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: {card_radius}px;
-                margin: {card_margin}px 0;
-                padding-top: {card_padding}px;
-                background-color: {ModernStyle.COLORS['bg_card']};
-            }}
-            QGroupBox::title {{
-                subcontrol-origin: margin;
-                left: {card_left}px;
-                padding: 0 {card_title_padding}px;
-                color: {ModernStyle.COLORS['text_primary']};
-                background-color: {ModernStyle.COLORS['bg_card']};
-            }}
-        """)
+        card = ModernCard("📝 키워드 입력")
+        # ModernCard의 기본 스타일 사용 (진행 상황 카드와 동일한 스타일)
         
         layout = QVBoxLayout(card)
-        layout.setSpacing(tokens.GAP_3)
-        layout.setContentsMargins(
-            tokens.GAP_12, tokens.GAP_3, 
-            tokens.GAP_12, tokens.GAP_8
-        )
+        spacing = int(tokens.GAP_3 * scale)
+        margin_h = int(tokens.GAP_12 * scale)
+        margin_top = int(tokens.GAP_3 * scale)
+        margin_bottom = int(tokens.GAP_8 * scale)
+        layout.setSpacing(spacing)
+        layout.setContentsMargins(margin_h, margin_top, margin_h, margin_bottom)
         
         # 키워드 입력 텍스트박스
         self.keyword_input = QTextEdit()
@@ -212,14 +197,16 @@ class PowerLinkControlWidget(QWidget):
         self.keyword_input.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.keyword_input.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         
-        input_radius = tokens.GAP_8
-        input_padding = tokens.GAP_16
-        input_font_size = tokens.get_font_size('normal')
-        input_height = 200
+        # 텍스트박스 스타일 - 반응형 스케일링 적용
+        input_radius = int(tokens.GAP_8 * scale)
+        input_padding = int(tokens.GAP_16 * scale)
+        input_font_size = int(tokens.get_font_size('normal') * scale)
+        input_height = int(200 * scale)
+        input_border_width = int(2 * scale)
         self.keyword_input.setStyleSheet(f"""
             QTextEdit {{
                 background-color: {ModernStyle.COLORS['bg_input']};
-                border: 2px solid {ModernStyle.COLORS['border']};
+                border: {input_border_width}px solid {ModernStyle.COLORS['border']};
                 border-radius: {input_radius}px;
                 padding: {input_padding}px;
                 font-size: {input_font_size}px;
@@ -241,23 +228,25 @@ class PowerLinkControlWidget(QWidget):
         return card
     
     def create_control_buttons(self) -> QWidget:
-        """분석 제어 버튼들"""
+        """분석 제어 버튼들 - 반응형 스케일링 적용"""
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         button_container = QWidget()
         button_layout = QHBoxLayout(button_container)
-        button_layout.setSpacing(tokens.GAP_12)
-        button_layout.setContentsMargins(0, tokens.GAP_8, 0, 0)  # 좌우 여백 제거
+        spacing = int(tokens.GAP_12 * scale)
+        margin_top = int(tokens.GAP_8 * scale)
+        button_layout.setSpacing(spacing)
+        button_layout.setContentsMargins(0, margin_top, 0, 0)  # 좌우 여백 제거
         
+        # 버튼 크기 - 반응형 스케일링 적용
+        button_height = int(tokens.GAP_48 * scale)
+        button_width = int(tokens.GAP_150 * scale)
         # 분석 시작 버튼
-        button_height = tokens.GAP_48
-        button_width = tokens.GAP_150
         self.analyze_button = ModernPrimaryButton("🚀 분석 시작")
-        self.analyze_button.setFixedHeight(button_height)
-        self.analyze_button.setFixedWidth(button_width)  # 너비 조정 (300 → 150)
         
-        # 정지 버튼
-        self.stop_button = ModernDangerButton("⏹ 정지")
-        self.stop_button.setFixedHeight(button_height)
-        self.stop_button.setFixedWidth(button_width)  # 시작 버튼과 동일한 너비
+        # 정지 버튼 (텍스트 길이를 맞춰서 내재적 크기 통일)
+        self.stop_button = ModernDangerButton("⏹ 분석 정지")
         self.stop_button.setEnabled(False)
         
         # 완전 중앙 정렬
