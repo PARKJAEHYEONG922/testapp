@@ -235,6 +235,7 @@ class NewProjectDialog(QDialog):
             dialog_height = max(self.height(), 200)
             
             # 버튼 위쪽에 다이얼로그 배치
+            scale = tokens.get_screen_scale_factor()  # 스케일 팩터 재획득
             gap = int(tokens.GAP_16 * 8 * scale)
             x = self.button_pos.x() - dialog_width // 2
             y = self.button_pos.y() - dialog_height - gap
@@ -461,6 +462,9 @@ class ProjectHistoryDialog(QDialog):
     
     def create_basic_info_tab(self):
         """기본정보 변경 탭 생성"""
+        # 반응형 스케일링 적용
+        scale = tokens.get_screen_scale_factor()
+        
         self.basic_info_table = QTableWidget()
         self.basic_info_table.setColumnCount(4)
         self.basic_info_table.setHorizontalHeaderLabels([
@@ -485,6 +489,9 @@ class ProjectHistoryDialog(QDialog):
     def create_keyword_management_tab(self):
         """키워드 관리 탭 생성 (2개 영역으로 분할)"""
         from PySide6.QtWidgets import QSplitter
+        
+        # 반응형 스케일링 적용
+        scale = tokens.get_screen_scale_factor()
         
         # 메인 위젯과 레이아웃 - 반응형 스케일링 적용
         main_widget = QWidget()
@@ -549,11 +556,11 @@ class ProjectHistoryDialog(QDialog):
         left_header.setSectionResizeMode(1, QHeaderView.Interactive)  # 가로 스크롤 가능하게 변경
         left_header.setSectionResizeMode(2, QHeaderView.Fixed)
         
-        column_width_80 = int(tokens.GAP_80 * scale)
-        column_width_120 = int(tokens.GAP_120 * scale)
+        column_width_100 = int(tokens.GAP_100 * scale)  # 날짜 컬럼을 100으로 설정
+        column_width_120_keyword = int(tokens.GAP_120 * scale)
         column_width_60 = int(tokens.GAP_60 * scale)
-        self.keyword_history_table.setColumnWidth(0, column_width_80)  # 날짜
-        self.keyword_history_table.setColumnWidth(1, column_width_120)  # 키워드
+        self.keyword_history_table.setColumnWidth(0, column_width_100)  # 날짜
+        self.keyword_history_table.setColumnWidth(1, column_width_120_keyword)  # 키워드
         self.keyword_history_table.setColumnWidth(2, column_width_60)   # 작업
         
         left_layout.addWidget(self.keyword_history_table)
@@ -612,10 +619,12 @@ class ProjectHistoryDialog(QDialog):
         right_header.setSectionResizeMode(2, QHeaderView.Interactive)  # 카테고리 열 가로 스크롤 가능
         right_header.setSectionResizeMode(3, QHeaderView.Fixed)
         
-        column_width_80_right = int(tokens.GAP_80 * scale)
+        column_width_100_right = int(tokens.GAP_100 * scale)  # 날짜를 100으로
+        column_width_120_right = int(tokens.GAP_120 * scale)  # 키워드를 120으로
         column_width_150_right = int(tokens.GAP_150 * scale)
-        self.current_keywords_table.setColumnWidth(0, column_width_80_right)  # 날짜
-        self.current_keywords_table.setColumnWidth(1, column_width_150_right)  # 키워드 (더 넓게)
+        column_width_80_right = int(tokens.GAP_80 * scale)
+        self.current_keywords_table.setColumnWidth(0, column_width_100_right)  # 날짜
+        self.current_keywords_table.setColumnWidth(1, column_width_120_right)  # 키워드
         self.current_keywords_table.setColumnWidth(2, column_width_150_right)  # 카테고리 (줄임: 200 → 150)
         self.current_keywords_table.setColumnWidth(3, column_width_80_right)   # 월검색량
         
@@ -635,6 +644,9 @@ class ProjectHistoryDialog(QDialog):
     
     def create_ranking_history_tab(self):
         """순위 이력 탭 생성 - 스크린샷 참고한 디자인"""
+        # 반응형 스케일링 적용
+        scale = tokens.get_screen_scale_factor()
+        
         main_widget = QWidget()
         main_layout = QVBoxLayout()
         main_margin = int(10 * scale)
@@ -748,6 +760,9 @@ class ProjectHistoryDialog(QDialog):
         table.setShowGrid(False)
         table.verticalHeader().setVisible(False)
         
+        # 반응형 스케일링 적용
+        scale = tokens.get_screen_scale_factor()
+        
         # 헤더 스타일 - 반응형 스케일링 적용
         header = table.horizontalHeader()
         header.setStretchLastSection(True)
@@ -755,8 +770,6 @@ class ProjectHistoryDialog(QDialog):
         header.setDefaultSectionSize(default_section_size)
         
         # 테이블 스타일
-        # 반응형 스케일링 적용
-        scale = tokens.get_screen_scale_factor()
         common_border_radius = int(tokens.GAP_6 * scale)
         common_item_padding = int(tokens.GAP_8 * scale)
         common_header_padding = int(tokens.GAP_10 * scale)
@@ -966,6 +979,9 @@ class ProjectHistoryDialog(QDialog):
     
     def load_ranking_history(self):
         """순위 이력 로드 - 현재 등록된 키워드들의 순위 변동 현황"""
+        # 반응형 스케일링 적용
+        scale = tokens.get_screen_scale_factor()
+        
         try:
             # 현재 등록된 키워드들 가져오기
             try:
@@ -1350,7 +1366,7 @@ class RankTrackingWidget(QWidget):
         
         # Row 0: 상품ID (새로고침 버튼 포함)
         product_id_header = QLabel("상품ID")
-        header_font_size = tokens.get_font_size('normal')
+        header_font_size = int(tokens.get_font_size('normal') * scale)
         product_id_header.setStyleSheet(f"""
             QLabel {{
                 font-size: {header_font_size}px;
@@ -1388,7 +1404,7 @@ class RankTrackingWidget(QWidget):
         self.refresh_product_button.setToolTip("상품 정보 새로고침")
         self.refresh_product_button.setFixedSize(btn_size + 2, btn_size + 2)
         border_radius = int(tokens.GAP_4 * scale)
-        btn_font_size = tokens.get_font_size('normal')
+        btn_font_size = int(tokens.get_font_size('normal') * scale)
         self.refresh_product_button.setStyleSheet(f"""
             QPushButton {{
                 background-color: #F3F4F6;
@@ -1592,8 +1608,8 @@ class RankTrackingWidget(QWidget):
         
         # 마지막 확인 시간 (카드 외부에 별도 표시)
         self.last_check_label = QLabel("마지막 확인: -")
-        last_check_font_size = tokens.get_font_size('large')  # normal → large로 변경
-        margin_top = tokens.GAP_6
+        last_check_font_size = int(tokens.get_font_size('large') * scale)  # normal → large로 변경
+        margin_top = int(tokens.GAP_6 * scale)
         self.last_check_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {last_check_font_size}px;
