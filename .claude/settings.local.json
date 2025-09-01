@@ -61,7 +61,10 @@
       "Bash(start dist/통합관리프로그램_v1.0.0_db_fixed.exe)",
       "Bash(start dist/통합관리프로그램_v1.0.0_playwright_system_browser.exe)",
       "Bash(start dist/통합관리프로그램_v1.0.0_responsive_ui.exe)",
-      "Bash(start dist/통합관리프로그램_v1.0.0_size_fixed.exe)"
+      "Bash(start dist/통합관리프로그램_v1.0.0_size_fixed.exe)",
+      "Bash(git clone:*)",
+      "Bash(xcopy:*)",
+      "Bash(robocopy:*)"
     ],
     "deny": []
   }

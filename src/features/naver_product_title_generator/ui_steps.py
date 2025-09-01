@@ -270,9 +270,12 @@ class Step1ResultWidget(QWidget):
         self.setup_ui()
         
     def setup_ui(self):
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         layout = QVBoxLayout()
-        margin = tokens.GAP_20
-        spacing = tokens.GAP_15
+        margin = int(tokens.GAP_20 * scale)
+        spacing = int(tokens.GAP_15 * scale)
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(spacing)
         
@@ -283,13 +286,16 @@ class Step1ResultWidget(QWidget):
         )
         layout.addLayout(header_layout)
         
-        # 전체선택 버튼 (왼쪽으로 이동)
+        # 전체선택 버튼 (왼쪽으로 이동) - 반응형 스케일링 적용
         button_layout = QHBoxLayout()
+        
+        # 화면 스케일 팩터 적용
+        scale = tokens.get_screen_scale_factor()
         
         self.select_all_button = QPushButton("전체선택")
         self.select_all_button.setObjectName("select_all_btn")
         self.select_all_button.clicked.connect(self.toggle_all_selection)
-        self.select_all_button.setMaximumWidth(80)
+        self.select_all_button.setMaximumWidth(int(80 * scale))
         button_layout.addWidget(self.select_all_button)
         
         button_layout.addStretch()
@@ -900,9 +906,14 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.setup_ui()
         
     def setup_ui(self):
+        # 화면 스케일 팩터 가져오기
+        scale = tokens.get_screen_scale_factor()
+        
         layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(15)
+        margin = int(20 * scale)
+        spacing = int(15 * scale)
+        layout.setContentsMargins(margin, margin, margin, margin)
+        layout.setSpacing(spacing)
         
         # 헤더
         header_layout = create_step_header(
@@ -1026,13 +1037,16 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         layout.addLayout(header_layout)
         
-        # 전체선택 버튼 (왼쪽으로 이동)
+        # 전체선택 버튼 (왼쪽으로 이동) - 반응형 스케일링 적용
         select_layout = QHBoxLayout()
+        
+        # 화면 스케일 팩터 적용
+        scale = tokens.get_screen_scale_factor()
         
         self.select_all_button = QPushButton("전체선택")
         self.select_all_button.setObjectName("select_all_btn")
         self.select_all_button.clicked.connect(self.toggle_all_selection)
-        self.select_all_button.setMaximumWidth(80)
+        self.select_all_button.setMaximumWidth(int(80 * scale))
         self.select_all_button.setEnabled(False)  # 분석 완료 후 활성화
         select_layout.addWidget(self.select_all_button)
         

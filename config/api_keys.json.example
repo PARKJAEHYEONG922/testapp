@@ -1,0 +1,13 @@
+{
+  "naver_shopping": {
+    "client_id": "YOUR_CLIENT_ID_HERE",
+    "client_secret": "YOUR_CLIENT_SECRET_HERE",
+    "is_valid": false
+  },
+  "naver_searchad": {
+    "access_license": "YOUR_ACCESS_LICENSE_HERE",
+    "secret_key": "YOUR_SECRET_KEY_HERE",
+    "customer_id": "YOUR_CUSTOMER_ID_HERE",
+    "is_valid": false
+  }
+}

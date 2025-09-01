@@ -1,0 +1,74 @@
+{
+  "app": {
+    "name": "네이버 마케팅 통합 관리",
+    "version": "1.0.0",
+    "window_size": [1400, 900],
+    "theme": "modern"
+  },
+  "api_keys": {
+    "naver": {
+      "accounts": [],
+      "selected": null
+    },
+    "openai": {
+      "accounts": [],
+      "selected": null  
+    },
+    "claude": {
+      "accounts": [],
+      "selected": null
+    },
+    "gemini": {
+      "accounts": [],
+      "selected": null
+    },
+    "advertising": {
+      "accounts": [],
+      "selected": null
+    }
+  },
+  "modules": {
+    "keyword_search": {
+      "enabled": true,
+      "name": "키워드 검색기",
+      "icon": "🔍",
+      "section": "analysis"
+    },
+    "product_title_generator": {
+      "enabled": true,
+      "name": "네이버상품명 생성",
+      "icon": "🏷️",
+      "section": "analysis"
+    },
+    "rank_tracking": {
+      "enabled": true,
+      "name": "네이버상품 순위추적",
+      "icon": "📈",
+      "section": "analysis"
+    },
+    "cafe_extractor": {
+      "enabled": true,
+      "name": "네이버카페 DB추출",
+      "icon": "🌐",
+      "section": "analysis"
+    },
+    "powerlink_analyzer": {
+      "enabled": true,
+      "name": "파워링크 광고비",
+      "icon": "💰",
+      "section": "analysis"
+    },
+    "blog_automation": {
+      "enabled": true,
+      "name": "블로그 포스팅 자동화",
+      "icon": "📝",
+      "section": "automation"
+    },
+    "youtube_automation": {
+      "enabled": true,
+      "name": "유튜브 쇼츠 자동화",
+      "icon": "🎬",
+      "section": "automation"
+    }
+  }
+}

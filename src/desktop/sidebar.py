@@ -134,8 +134,8 @@ class Sidebar(QWidget):
         default_modules = [
             ('keyword_analysis', '키워드 검색기', '🔍'),
             ('rank_tracking', '네이버상품 순위추적', '📈'),
-            ('naver_cafe', '네이버 카페DB추출', '👥'),
             ('powerlink_analyzer', '파워링크 광고비', '💰'),
+            ('powerlink_automation', '파워링크 자동입찰', '🚀'),
             ('naver_product_title_generator', '네이버 상품명 생성기', '🏷️'),
         ]
         

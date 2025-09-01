@@ -24,12 +24,6 @@ def load_features(app):
         register_keyword_analysis(app)
         logger.info("키워드 분석 모듈 로드 완료")
         
-        # 네이버 카페 DB 추출 기능 로드 및 등록 (토큰 변환 완료)
-        logger.info("네이버 카페 모듈 로드 시작")
-        from src.features.naver_cafe import register as register_naver_cafe
-        register_naver_cafe(app)
-        logger.info("네이버 카페 모듈 로드 완료")
-        
         # 순위추적 기능 로드 및 등록 (토큰 변환 완료)
         logger.info("순위추적 모듈 로드 시작")
         from src.features.rank_tracking import register as register_rank_tracking
@@ -47,6 +41,12 @@ def load_features(app):
         from src.features.naver_product_title_generator import register as register_naver_product_title
         register_naver_product_title(app)
         logger.info("네이버 상품명 생성기 모듈 로드 완료")
+        
+        # 파워링크 자동화 기능 로드 및 등록
+        logger.info("파워링크 자동화 모듈 로드 시작")
+        from src.features.powerlink_automation import register as register_powerlink_automation
+        register_powerlink_automation(app)
+        logger.info("파워링크 자동화 모듈 로드 완료")
         
         logger.info("기능 모듈 로드 완료 (일부 모듈은 토큰 변환 후 사용 가능)")
         
